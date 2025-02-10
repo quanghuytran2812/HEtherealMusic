@@ -1,12 +1,14 @@
-const Logo = () => {
+interface LogoProps {
+  className?: string;
+  classImg?: string;
+  classLink?: string;
+}
+
+const Logo = ({ className, classLink, classImg }: LogoProps) => {
   return (
-    <div className="flex gap-2 items-center z-10">
-      <a href="/" className="m-5">
-        <img
-          src="/logo.svg"
-          alt="HEthereal"
-          className="size-8 bg-white rounded-full"
-        />
+    <div className={className}>
+      <a href="/" className={classLink}>
+        <img src="/logo.svg" alt="HEthereal" className={classImg} />
       </a>
     </div>
   );

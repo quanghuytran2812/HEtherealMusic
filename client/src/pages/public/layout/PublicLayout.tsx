@@ -21,6 +21,7 @@ const PublicLayout = () => {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+  
   return (
     <div className="h-full bg-black text-white flex flex-col p-2 gap-2">
       <Header />

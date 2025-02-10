@@ -16,7 +16,7 @@ const LeftSidebar = () => {
 
   const handleCreatePlaylist = () => {
     if (isLoggedIn) {
-      console.log("Create playlist");
+      // console.log("Create playlist");
     } else {
       setTooltipVisible(true);
     }

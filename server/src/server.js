@@ -2,21 +2,49 @@
  * Updated by augustus.hyu_'s author on January 02, 2024
  * "Code is like humor. When you have to explain it, it’s bad." by Cory House
  */
-const express = require('express');
-const cors = require('cors');
-const app = express();
-require('dotenv').config();
+const express = require('express')
+const cors = require('cors')
+const helmet = require('helmet')
+const { env } = require('@/config/environment.config')
+const CONNECT_DB = require('@/config/db')
+const routes = require('@/routes/v1')
+const errorHandlingMiddleware = require('@/middlewares/errorHandlingMiddleware')
+const { corsOptions } = require('@/config/cors')
+const cookieParser = require('cookie-parser')
 
-app.use(cors({
-  origin: process.env.CLIENT_URL,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
-}));
-app.use(express.json());
+// Create an Express app
+const app = express()
+const port = env.PORT || 8888
 
-const port = process.env.PORT || 8888;
+// Connect to the database
+CONNECT_DB()
 
-app.listen(process.env.PORT, () => {
+// Fix cache from disk of express js
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store')
+  next()
+})
+
+// Middleware to set security HTTP headers
+app.use(helmet())
+// Middleware to parse JSON bodies
+app.use(express.json())
+
+// Middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }))
+
+// Enable CORS & cookies parser
+app.use(cors(corsOptions))
+app.use(cookieParser())
+
+// routes
+app.use('/v1', routes)
+
+//Middleware xử lý lỗi tập trung
+app.use(errorHandlingMiddleware)
+
+// Start the server
+app.listen(port, () => {
   // eslint-disable-next-line no-console
-  console.log(`Server is running on port ${port}`);
-});
+  console.log(`Server is running on port ${port}`)
+})

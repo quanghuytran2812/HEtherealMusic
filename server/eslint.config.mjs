@@ -2,8 +2,8 @@
  * Updated by augustus.hyu_'s author on January 02, 2024
  * Sample Eslint config for NodeJS ExpressJS MongoDB project
  */
-import globals from 'globals';
-import pluginJs from '@eslint/js';
+import globals from 'globals'
+import pluginJs from '@eslint/js'
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -21,7 +21,7 @@ export default [
       'space-before-blocks': ['error', 'always'],
       'object-curly-spacing': ['warn', 'always'],
       'indent': ['warn', 2],
-      'semi' : ['error', 'always'],
+      'semi' : ['warn', 'never'],
       'quotes': ['error', 'single'],
       'array-bracket-spacing': 'warn',
       'linebreak-style': 'off',
@@ -32,4 +32,4 @@ export default [
       'arrow-spacing': 'warn'
     }
   }
-];
+]

@@ -1,6 +1,13 @@
 import App from "./App";
 import { pathname } from "./lib/pathname";
-import { HomePage, PublicLayout, SearchPage } from "./pages/public";
+import {
+  AccountVerification,
+  HomePage,
+  LoginPage,
+  PublicLayout,
+  SearchPage,
+  SignupPage,
+} from "./pages/public";
 
 const routes = [
   {
@@ -20,6 +27,18 @@ const routes = [
             element: <SearchPage />,
           },
         ],
+      },
+      {
+        path: pathname.publics.signup,
+        element: <SignupPage />,
+      },
+      {
+        path: pathname.publics.login,
+        element: <LoginPage />,
+      },
+      {
+        path: pathname.publics.accountVerification,
+        element: <AccountVerification />,
       },
     ],
   },

@@ -102,8 +102,7 @@ export const dataArtist = [
   {
     _id: 5,
     title: "Soyeon",
-    imageUrl:
-      "https://2sao.vietnamnetjsc.vn/images/2022/12/14/11/07/h2.jpg",
+    imageUrl: "https://2sao.vietnamnetjsc.vn/images/2022/12/14/11/07/h2.jpg",
   },
 ];
 
@@ -115,3 +114,21 @@ export const dataLikeSong = [
     _id: 2,
   },
 ];
+
+export const enumData = {
+  userType: ["user", "admin", "artist"],
+  gender: [
+    {
+      value: "male",
+      label: "Nam",
+    },
+    {
+      value: "female",
+      label: "Nữ",
+    },
+    {
+      value: "other",
+      label: "Giới tính khác",
+    },
+  ],
+};
