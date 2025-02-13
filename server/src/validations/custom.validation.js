@@ -25,9 +25,6 @@ const messages = {
   gender: {
     required: 'Gender is required.',
     invalid: 'Gender must be one of the following: ' + enumData.gender.join(', ')
-  },
-  country: {
-    required: 'Country is required.'
   }
 }
 

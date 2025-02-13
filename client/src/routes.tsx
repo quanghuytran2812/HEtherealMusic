@@ -8,6 +8,8 @@ import {
   SearchPage,
   SignupPage,
 } from "./pages/public";
+import NotFoundPage from "./pages/public/NotFoundPage";
+import { ProfilePage } from "./pages/user";
 
 const routes = [
   {
@@ -26,6 +28,10 @@ const routes = [
             path: pathname.publics.searchpage,
             element: <SearchPage />,
           },
+          {
+            path: pathname.publics.profile,
+            element: <ProfilePage />,
+          },
         ],
       },
       {
@@ -39,6 +45,10 @@ const routes = [
       {
         path: pathname.publics.accountVerification,
         element: <AccountVerification />,
+      },
+      {
+        path: pathname.publics.notFound,
+        element: <NotFoundPage />,
       },
     ],
   },

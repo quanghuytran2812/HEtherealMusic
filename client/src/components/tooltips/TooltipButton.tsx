@@ -39,7 +39,7 @@ const TooltipButton = ({
             {title}
           </Button>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent className="bg-[#1f1f1f]">
           <p>{tooltipContent}</p>
         </TooltipContent>
       </Tooltip>

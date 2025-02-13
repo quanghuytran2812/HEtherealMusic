@@ -1,12 +1,7 @@
 import { pathname } from "@/lib/pathname";
+import { useMeStore } from "@/stores/useMeStore";
+import { MenuItem } from "@/utils/types";
 import { ExternalLink } from "lucide-react";
-
-interface MenuItem {
-  id: number;
-  title: string;
-  path: string;
-  icon?: React.ReactNode; // Optional icon
-}
 
 const Menu: MenuItem[] = [
   {
@@ -25,6 +20,11 @@ const Menu: MenuItem[] = [
     title: "Setting",
     path: pathname.publics.layout + pathname.publics.setting,
   },
+  {
+    id: 4,
+    title: "Log out",
+    onClick: () => { useMeStore.getState().logout(); },
+  }
 ];
 
 export default Menu;

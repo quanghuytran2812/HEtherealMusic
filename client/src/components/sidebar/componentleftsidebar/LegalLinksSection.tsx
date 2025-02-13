@@ -1,3 +1,4 @@
+import { legalLinks } from "@/utils/contants";
 import LanguageButton from "./LanguageButton";
 import LegalLink from "./LegalLink";
 
@@ -8,15 +9,13 @@ const LegalLinksSection = () => {
         {/* left-sidebar-legal-links */}
         <div className="flex flex-wrap">
           {/* List of legal links */}
-          {[
-            { href: "#", text: "Legal" },
-            { href: "#", text: "Safety & Privacy Center" },
-            { href: "#", text: "Privacy Policy" },
-            { href: "#", text: "Cookies" },
-            { href: "#", text: "About Ads" },
-            { href: "#", text: "Accessibility" },
-          ].map((link, index) => (
-            <LegalLink key={index} href={link.href} text={link.text} />
+          {legalLinks.map((link, index) => (
+            <LegalLink
+              key={index}
+              href={link.href}
+              text={link.text}
+              classText="text-[0.6875rem]"
+            />
           ))}
         </div>
         <a href="#">

@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface AnnouncementTooltipProps {
   isVisible: boolean;
   onClose: () => void; 
 }
 const AnnouncementTooltip = ({ isVisible, onClose  }: AnnouncementTooltipProps) => {
+  const navigate = useNavigate();
   return (
     <div
       className={`absolute h-fit inset-y-0 m-0 left-[29%] translate-y-[140px] z-50 ${
@@ -29,7 +31,7 @@ const AnnouncementTooltip = ({ isVisible, onClose  }: AnnouncementTooltipProps) 
                 >
                   Not now
                 </Button>
-                <Button className="text-sm font-bold bg-white text-black rounded-full hover:bg-white/90 hover:text-black hover:scale-105 transition-all">
+                <Button onClick={() => navigate("/login")} className="text-sm font-bold bg-white text-black rounded-full hover:bg-white/90 hover:text-black hover:scale-105 transition-all">
                   Log in
                 </Button>
               </div>

@@ -3,6 +3,8 @@ import { TooltipButton } from "../tooltips";
 
 type CardProps<T> = {
   title: string;
+  description?: string;
+  classSection?: string;
   items: T[];
 };
 
@@ -16,19 +18,22 @@ const Card = <
   }
 >({
   title,
+  description,
+  classSection,
   items,
 }: CardProps<T>) => {
   return (
-    <section className="flex flex-col relative min-w-full min-h-[260px]">
+    <section className={`flex flex-col relative min-w-full min-h-[260px] ${classSection}`}>
       <header className="flex justify-between mb-2">
-        <h2 className="text-2xl font-bold text-balance">
+        <h2 className="flex flex-col text-2xl font-bold text-balance gap-1">
           <a href="#" className="hover:underline">
             {title}
           </a>
+          <p className="text-[#b3b3b3] text-sm font-normal">{description}</p>
         </h2>
         <a
           href="#"
-          className="text-[#b3b3b3] font-bold text-sm hover:underline"
+          className="flex flex-col justify-end text-[#b3b3b3] font-bold text-sm hover:underline"
         >
           Show all
         </a>
@@ -59,8 +64,7 @@ const CardItem: React.FC<{
       <div className="relative">
         <img
           src={
-            imageUrl ||
-            "https://img.freepik.com/premium-photo/woman-s-face-with-landscape-background_250469-18401.jpg"
+            imageUrl
           }
           alt={title}
           className={`w-36 h-36 object-center object-cover ${

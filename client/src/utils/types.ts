@@ -49,3 +49,11 @@ export interface VerifyUserData {
   email: string;
   token: string;
 }
+
+export interface MenuItem {
+  id: number;
+  title: string;
+  path?: string;
+  icon?: React.ReactNode;
+  onClick?: () => void;
+}

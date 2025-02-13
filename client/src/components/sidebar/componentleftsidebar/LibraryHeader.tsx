@@ -1,12 +1,6 @@
+import { DropdownMenuCustom } from "@/components/menu";
 import { TooltipButton } from "@/components/tooltips";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Library, ListPlus, Plus } from "lucide-react";
+import { Library, Plus } from "lucide-react";
 
 interface LibraryHeaderProps {
   buttonAction: () => void; // Function type for button action
@@ -25,21 +19,15 @@ const LibraryHeader = ({ buttonAction }: LibraryHeaderProps) => {
           />
         </div>
         <span className="flex">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="hover:bg-zinc-800 rounded-full p-2 size-6">
-                <Plus size={20} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-[#282828] text-white border-transparent">
-              <DropdownMenuItem className="focus:bg-white focus:bg-opacity-10 focus:text-white cursor-pointer">
-                <ListPlus />
-                <Button onClick={buttonAction} className="p-0">
-                  <span>Create a new playlist</span>
-                </Button>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <DropdownMenuCustom
+          tooltip={{
+            tooltipContent: 'Create playlist or folder',
+            triggerIcon: <Plus size={20} />,
+          }}
+          items={[
+            { id: 1, title: 'Create a new playlist', onClick: buttonAction },
+          ]}
+        />
         </span>
       </div>
     </header>

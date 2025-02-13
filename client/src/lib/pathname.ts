@@ -1,6 +1,7 @@
 export const pathname = {
   publics: {
     layout: "/",
+    notFound: "*",
     homepage: "",
     searchpage: "search",
     login: "login",

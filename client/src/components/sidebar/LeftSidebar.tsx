@@ -24,7 +24,7 @@ const LeftSidebar = () => {
 
   return (
     <>
-      <div className="h-full flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         <div className="rounded-lg bg-[#121212]">
           <LibraryHeader buttonAction={handleCreatePlaylist} />
           <div className="flex items-center gap-2 mx-4 my-2"></div>

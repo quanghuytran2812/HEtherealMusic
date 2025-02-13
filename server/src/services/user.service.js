@@ -50,12 +50,12 @@ const generateEmailContent = (verificationLink) => `
     .container { max-width: 600px; margin: 0 auto; }
     .header { display: flex; }
     .header img { width: 80px; height: 74px; }
-    .header p { font-size: x-large; color: #f4bf01;}
+    .header p { font-size: x-large; color: #1ed760;}
     a { text-decoration: none; }
     .content { text-align: center; max-width: 450px; }
     .content .title { color: #000000; font-size: 28px;}
     .content .description { color: #000000; font-size: 18px;}
-    .button { display: inline-block; background: #f4bf01; padding: 0 30px; border-radius: 50px; }
+    .button { display: inline-block; background: #1ed760; padding: 0 30px; border-radius: 50px; }
     .button p { color: #fff; font-size: 14px; font-weight: bold; }
   </style>
 </head>

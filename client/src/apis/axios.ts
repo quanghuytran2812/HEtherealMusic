@@ -40,6 +40,7 @@ authorizedAxiosInstance.interceptors.response.use(
     // Case 1: If a 401 status code is received, log out
     if (error.response?.status === 401) {
       useMeStore.getState().logout();
+      localStorage.clear();
       location.href = "/login";
     }
 
@@ -55,6 +56,7 @@ authorizedAxiosInstance.interceptors.response.use(
           .catch(() => {
             // Log out on any error from the refresh token API
             useMeStore.getState().logout();
+            localStorage.clear();
             location.href = "/login";
           })
           .finally(() => {

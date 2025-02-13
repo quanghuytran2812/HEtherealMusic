@@ -1,3 +1,5 @@
+import { Facebook, Instagram, Twitter } from "lucide-react";
+
 export const dataPlaylist = [
   {
     _id: 1,
@@ -106,6 +108,45 @@ export const dataArtist = [
   },
 ];
 
+export const dataSong = [
+  {
+    _id: 1,
+    title: "한 번도 하지 못한 이야기",
+    artist: "Sondia",
+    albumName: "Extraordinary You Pt.6 (Original Television Soundtrack)",
+    isLiked: true,
+    imageUrl:
+      "https://i.scdn.co/image/ab67616d000048513a7b87999e566477ad3adbfc",
+  },
+  {
+    _id: 2,
+    title: "Grown Ups",
+    artist: "Sondia",
+    albumName: "My Mister (Original Television Soundtrack), Pt. 2",
+    isLiked: false,
+    imageUrl:
+      "https://i.scdn.co/image/ab67616d00004851904295277c8e443e39c8e5d9",
+  },
+  {
+    _id: 3,
+    title: "My Destiny",
+    artist: "Lyn",
+    albumName: "My Love From the Star Part 1",
+    isLiked: false,
+    imageUrl:
+      "https://i1.sndcdn.com/artworks-000079746029-x1t681-t500x500.jpg",
+  },
+  {
+    _id: 4,
+    title: "As Tomorrow Comes",
+    artist: "Sondia",
+    albumName: "As Tomorrow Comes ('Namib' [Original Soundtrack])",
+    isLiked: false,
+    imageUrl:
+      "https://i.scdn.co/image/ab67616d00004851c5df7758d71467198a705dd7",
+  },
+];
+
 export const dataLikeSong = [
   {
     _id: 1,
@@ -132,3 +173,43 @@ export const enumData = {
     },
   ],
 };
+
+export const companyLinks = [
+  { href: "https://www.spotify.com/vn-vi/about-us/contact/", text: "About" },
+  { href: "https://www.lifeatspotify.com/", text: "Jobs" },
+  { href: "https://newsroom.spotify.com/", text: "For the Record" },
+];
+
+export const communityLinks = [
+  { href: "https://artists.spotify.com/home", text: "For Artists" },
+  { href: "https://developer.spotify.com/", text: "Developers" },
+  { href: "https://ads.spotify.com/en-US/", text: "Advertising" },
+  { href: "https://investors.spotify.com/home/default.aspx", text: "Investors" },
+  { href: "https://spotifyforvendors.com/", text: "Vendors" },
+];
+
+export const usefulLinks = [
+  { href: "https://support.spotify.com/vn-vi/", text: "Support" },
+  { href: "https://www.spotify.com/vn-vi/download/windows/", text: "Free Mobile App" },
+];
+
+export const planLinks = [
+  { href: "https://support.spotify.com/vn-vi/", text: "Premium Individual" },
+  { href: "https://www.spotify.com/vn-vi/premium/#ref=spotifycom_footer_premium_individual", text: "Premium Student" },
+  { href: "https://www.spotify.com/vn-vi/free/#ref=spotifycom_footer_free", text: "Spotify Free" },
+];
+
+export const socialLinks = [
+  { href: "https://www.instagram.com/spotify/", icon: Instagram },
+  { href: "https://x.com/spotify", icon: Twitter },
+  { href: "https://www.facebook.com/Spotify", icon: Facebook },
+];
+
+export const legalLinks = [
+  { href: "#", text: "Legal" },
+  { href: "#", text: "Safety & Privacy Center" },
+  { href: "#", text: "Privacy Policy" },
+  { href: "#", text: "Cookies" },
+  { href: "#", text: "About Ads" },
+  { href: "#", text: "Accessibility" },
+];
