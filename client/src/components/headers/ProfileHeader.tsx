@@ -17,9 +17,13 @@ const ProfileInfo = ({
   <div className="flex flex-1 flex-col h-full justify-end gap-8">
     <span className="text-sm font-normal">Profile</span>
     <span className="w-full">
-      <Button className="p-0">
-        <h1 className="text-[#fff] text-8xl font-extrabold">{name}</h1>
-      </Button>
+      <ProfileUpdateDialog
+        triggerContent={
+          <Button className="p-0">
+            <h1 className="text-[#fff] text-8xl font-extrabold">{name}</h1>
+          </Button>
+        }
+      />
     </span>
     <div className="flex flex-wrap items-center mt-2 gap-1">
       <span className="text-sm font-normal text-[#FFFFFFB3]">

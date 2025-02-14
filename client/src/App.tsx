@@ -11,8 +11,7 @@ function App() {
     if (isAuthenticated) {
       getMe();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]);
+  }, [isAuthenticated, getMe]);
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">

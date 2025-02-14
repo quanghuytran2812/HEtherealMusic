@@ -104,15 +104,7 @@ const comparePassword = async (inputPassword, storedPassword) => {
 
 const findUserById = async (id) => {
   try {
-    const user = await User.findById(id).select({
-      verified_email: 0,
-      verifyToken: 0,
-      password: 0,
-      isDeleted: 0,
-      createdAt: 0,
-      updatedAt: 0,
-      type: 0
-    })
+    const user = await User.findById(id)
     return user
   } catch (error) {
     throw new Error(error)

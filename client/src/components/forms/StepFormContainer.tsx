@@ -13,6 +13,7 @@ import {
 } from "@/utils/validators";
 import TermsAndConditions from "./TermsAndConditions";
 import FormPasswordInput from "./FormPasswordInput";
+import { classname } from "@/lib/classname";
 
 interface StepFormContainerProps {
   currentStep: number;
@@ -54,6 +55,7 @@ const StepFormContainer = ({
           label="Địa chỉ email"
           name="email"
           placeholder="name@domain.com"
+          classInput={classname.formInput}
         />
       ),
     },
@@ -79,6 +81,7 @@ const StepFormContainer = ({
             label="Tên"
             desc="Tên này sẽ xuất hiện trên hồ sơ của bạn"
             name="name"
+            classInput={classname.formInput}
           />
           <DateOfBirthInput form={forms.userInfo} label="Ngày sinh" />
           <GenderInput form={forms.userInfo} name="gender" label="Giới tính" />

@@ -1,6 +1,9 @@
 const { enumData } = require('@/utils/constants')
 const moment = require('moment')
 
+const MAX_MB = 10
+const MAX_UPLOAD_SIZE = 1024 * 1024 * MAX_MB
+const ACCEPTED_IMAGE_TYPES = ['image/jpg', 'image/png', 'image/jpeg']
 const passwordModelRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{10,}$/
 const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9#?!&])(?!.*\s).{10,}$/
 
@@ -50,5 +53,7 @@ module.exports = {
   passwordRegex,
   passwordModelRegex,
   messages,
-  validateDob
+  validateDob,
+  MAX_UPLOAD_SIZE,
+  ACCEPTED_IMAGE_TYPES
 }

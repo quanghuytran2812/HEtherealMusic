@@ -7,7 +7,7 @@ import { apiRefreshToken } from "./auth";
 const authorizedAxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URL,
   timeout: 10000 * 60 * 10,
-  withCredentials: true,
+  withCredentials: true
 });
 
 // Add a request interceptor
@@ -95,5 +95,6 @@ export const endpoints = {
   user: {
     signUpWithGmail: "/users/sign-up-with-gmail",
     getMe: "/users/me",
+    updateUser: "/users/update-user",
   },
 };

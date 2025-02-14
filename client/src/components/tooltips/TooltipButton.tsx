@@ -1,10 +1,11 @@
-import { Button } from "@/components/ui/button";
+import React from 'react';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 interface TooltipButtonProps {
   tooltipContent: string;
@@ -14,8 +15,10 @@ interface TooltipButtonProps {
   classLink?: string;
   sizeButton?: "default" | "icon" | "lg" | "sm";
   title?: string;
+  onClick?: () => void;
 }
-const TooltipButton = ({
+
+const TooltipButton = React.forwardRef<HTMLButtonElement, TooltipButtonProps>(({
   tooltipContent,
   icon,
   href,
@@ -23,12 +26,13 @@ const TooltipButton = ({
   classLink,
   sizeButton,
   title,
-}: TooltipButtonProps) => {
+  onClick
+}, ref) => {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button size={sizeButton} className={className}>
+          <Button size={sizeButton} onClick={onClick} className={className} ref={ref}>
             {href ? (
               <a className={classLink} href={href}>
                 {icon}
@@ -45,6 +49,8 @@ const TooltipButton = ({
       </Tooltip>
     </TooltipProvider>
   );
-};
+});
+
+TooltipButton.displayName = 'TooltipButton'; // Set a display name for debugging
 
 export default TooltipButton;

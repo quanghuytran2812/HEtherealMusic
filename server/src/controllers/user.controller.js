@@ -12,7 +12,15 @@ const getMe = catchAsync (async(req, res) => {
   res.status(StatusCodes.OK).send(user)
 })
 
+const updateUser = catchAsync (async(req, res) => {
+  const userId = req.user.uid
+  const userAvatarFile = req.file
+  const user = await userService.updateUser(userId, req.body, userAvatarFile)
+  res.status(StatusCodes.OK).send(user)
+})
+
 module.exports = {
   createUser,
-  getMe
+  getMe,
+  updateUser
 }

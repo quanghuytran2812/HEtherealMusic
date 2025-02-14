@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMeStore } from "@/stores/useMeStore";
 import { NotificationAlert } from "../alerts";
+import { classname } from "@/lib/classname";
 
 const notificationMessages = {
   registered: (email: string) => (
@@ -105,6 +106,7 @@ const LoginForm = () => {
             label="Địa chỉ email"
             name="email"
             placeholder="name@domain.com"
+            classInput={classname.formInput}
           />
           <FormPasswordInput
             form={form}

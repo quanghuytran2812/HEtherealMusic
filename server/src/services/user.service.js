@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs')
 const { BrevoEmail } = require('@/utils/BrevoEmail')
 const { env } = require('@/config/environment.config')
 import { v4 as uuidv4 } from 'uuid'
+import { CloudinaryProvider } from '@/utils/cloudinary.utils'
 
 const hashPassword = (password) => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
 
@@ -42,7 +43,7 @@ const sendVerificationEmail = async (recipientEmail, verificationLink) => {
   await BrevoEmail.sendEmail({ recipientEmail, subject, htmlContent })
 }
 
-const logoImage = 'https://www.creativefabrica.com/wp-content/uploads/2020/08/06/Music-Logo-Graphics-4868281-1-1-580x386.jpg'
+const logoImage = 'https://res.cloudinary.com/dvsokroe6/image/upload/v1739503783/users/dcwgzprdkuxqpfgdavvw.png'
 const generateEmailContent = (verificationLink) => `
 <html>
 <head>
@@ -81,7 +82,35 @@ const getMe = async (user) => {
   return { success: !!response, user: response }
 }
 
+const updateUser = async (id, reqBody, fileImage) => {
+  const existsUser = await User.findUserById(id)
+
+  if (!existsUser) throw new ApiError(StatusCodes.NOT_FOUND, 'Account not found!')
+  if (existsUser.isDeleted) throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Your account has been locked due to too many unsuccessful login attempts. Please contact support!')
+  if (!existsUser.verified_email) throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Your email has not been verified!')
+
+  let updateUser = {}
+  if (reqBody.current_password && reqBody.new_password) {
+    const isPasswordValid = await User.comparePassword(reqBody.current_password, existsUser.password)
+
+    if (!isPasswordValid) {
+      throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Invalid current password!')
+    }
+
+    updateUser = await User.updateUser(existsUser._id, { password: hashPassword(reqBody.new_password) })
+  } else if (fileImage) {
+    const uploadedFile = await CloudinaryProvider.streamUpload(fileImage.buffer, 'users')
+
+    updateUser = await User.updateUser(existsUser._id, { name: reqBody.name, imageUrl: uploadedFile.secure_url })
+  } else {
+    updateUser = await User.updateUser(existsUser._id, { name: reqBody.name })
+  }
+
+  return { success: !!updateUser }
+}
+
 module.exports = {
   createUser,
-  getMe
+  getMe,
+  updateUser
 }

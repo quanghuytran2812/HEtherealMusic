@@ -68,3 +68,19 @@ function getAge(birthDate : Date) {
   const m = today.getMonth() - birthDate.getMonth();
   return m < 0 || (m === 0 && today.getDate() < birthDate.getDate()) ? age - 1 : age;
 }
+
+const MAX_MB = 10;
+const MAX_UPLOAD_SIZE = 1024 * 1024 * MAX_MB;
+const ACCEPTED_IMAGE_TYPES = ["image/jpg", "image/png", "image/jpeg"];
+export const updateProfileValidator = z.object({
+  name: z.string({ required_error: "Name is required." })
+    .min(1, { message: "Name is required." }),
+  imageUrl: z
+    .instanceof(File)
+    .refine((file) => {
+      return file.size <= MAX_UPLOAD_SIZE;
+    }, `Maximum upload size is ${MAX_MB}MB.`)
+    .refine((file) => {
+      return file.name.trim().length <= 0 || ACCEPTED_IMAGE_TYPES.includes(file.type);
+    }, "Only .jpg, .jpeg, and .png images are accepted.")
+});

@@ -57,3 +57,8 @@ export interface MenuItem {
   icon?: React.ReactNode;
   onClick?: () => void;
 }
+
+export interface UpdateUserData {
+  name?: string;
+  imageUrl?: File;
+}

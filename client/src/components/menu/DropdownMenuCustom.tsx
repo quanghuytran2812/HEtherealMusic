@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -36,9 +36,15 @@ const DropdownMenuCustom = ({
   itemsPerGroup = 2,
   avatar,
 }: CustomDropdownMenuProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggle = () => {
+    setIsOpen(prev => !prev);
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+      <DropdownMenuTrigger asChild>
         {avatar ? (
           <Avatar className="size-8">
             <AvatarImage src={avatar?.imageUrl} />
@@ -50,6 +56,7 @@ const DropdownMenuCustom = ({
             icon={tooltip?.triggerIcon}
             className="flex items-center flex-shrink-0 hover:scale-105"
             sizeButton="icon"
+            onClick={handleToggle} // Toggle dropdown on click
           />
         )}
       </DropdownMenuTrigger>

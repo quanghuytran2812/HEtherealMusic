@@ -10,8 +10,10 @@ import { DropdownMenuCustom } from "@/components/menu";
 import { ProfileHeader } from "@/components/headers";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FooterMainContent } from "@/components/footers";
+import { useMeStore } from "@/stores/useMeStore";
 
 const ProfilePage = () => {
+  const { me } = useMeStore();
 
   return (
     <main className="w-full h-full p-0 overflow-hidden">
@@ -21,7 +23,7 @@ const ProfilePage = () => {
           <div className="px-5 pb-5 pt-8">
           <DropdownMenuCustom
               tooltip={{
-                tooltipContent: 'More options',
+                tooltipContent: `More options for ${me?.name}`,
                 triggerIcon: <Ellipsis size={32} />,
               }}
               items={[

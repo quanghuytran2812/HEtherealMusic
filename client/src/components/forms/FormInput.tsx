@@ -11,6 +11,7 @@ interface FormInputProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any;
   label?: string;
+  classInput?: string;
   desc?: string;
   name: string;
   type?: string;
@@ -20,6 +21,7 @@ interface FormInputProps {
 const FormInput = ({
   form,
   label,
+  classInput,
   desc,
   name,
   type = "text",
@@ -45,7 +47,7 @@ const FormInput = ({
           <FormControl>
             <Input
               type={type}
-              className="h-12 text-base font-normal p-3 bg-transparent border border-gray-400 placeholder:text-[#818181] placeholder:text-base placeholder:font-medium hover:border-white"
+              className={classInput}
               placeholder={placeholder}
               {...field}
             />

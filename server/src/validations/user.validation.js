@@ -15,13 +15,10 @@ const createUser = async (req, res, next) => {
         'string.email': messages.email.invalid
       }),
     password: Joi.string()
-      .required()
       .trim()
       .min(10)
       .regex(passwordRegex)
-      .optional()
       .messages({
-        'string.empty': messages.password.required,
         'string.pattern.base': messages.password.base,
         'string.min': messages.password.min
       }),
@@ -64,6 +61,42 @@ const createUser = async (req, res, next) => {
   }
 }
 
+const updateUser = async (req, res, next) => {
+  const schema = Joi.object({
+    name: Joi.string()
+      .trim()
+      .strict(),
+    current_password: Joi.string()
+      .trim()
+      .min(10)
+      .regex(passwordRegex)
+      .messages({
+        'string.pattern.base': messages.password.base,
+        'string.min': messages.password.min
+      }),
+    new_password: Joi.string()
+      .trim()
+      .min(10)
+      .regex(passwordRegex)
+      .messages({
+        'string.pattern.base': messages.password.base,
+        'string.min': messages.password.min
+      })
+  })
+  try {
+    await schema.validateAsync(req.body, { abortEarly: false })
+    next()
+  } catch (error) {
+    next(
+      new ApiError(
+        StatusCodes.UNPROCESSABLE_ENTITY,
+        error.details.map((err) => err.message).join(', ')
+      )
+    )
+  }
+}
+
 module.exports = {
-  createUser
+  createUser,
+  updateUser
 }
