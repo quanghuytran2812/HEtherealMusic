@@ -1,6 +1,6 @@
 const { env } = require('@/config/environment.config')
-const ApiError = require('@/utils/ApiError')
-const { verifyToken } = require('@/utils/jwtProvider')
+const { ApiError } = require('@/utils/apiError.utils')
+const { verifyToken } = require('@/utils/jwtProvider.utils')
 const { StatusCodes } = require('http-status-codes')
 
 const isAuthorized = async (req, res, next) => {
@@ -8,7 +8,9 @@ const isAuthorized = async (req, res, next) => {
   // authorizeAxios and credentials in CORS
   const accessTokenFromCookie = req.cookies?.accessToken
   if (!accessTokenFromCookie) {
-    next(new ApiError(StatusCodes.UNAUTHORIZED, 'Unauthorized! (Token not found)'))
+    next(
+      new ApiError(StatusCodes.UNAUTHORIZED, 'Unauthorized! (Token not found)')
+    )
     return
   }
 
@@ -41,6 +43,15 @@ const isAuthorized = async (req, res, next) => {
   }
 }
 
+const isAuthorizedAdmin = async (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    next(new ApiError(StatusCodes.FORBIDDEN, 'You are not admin!'))
+    return
+  }
+  next()
+}
+
 module.exports.authMiddleware = {
-  isAuthorized
+  isAuthorized,
+  isAuthorizedAdmin
 }

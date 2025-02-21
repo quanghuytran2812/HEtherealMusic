@@ -1,6 +1,6 @@
 const { env } = require('@/config/environment.config')
-const ApiError = require('@/utils/ApiError')
-const { WHITELIST_DOMAINS } = require('@/utils/constants')
+const { ApiError } = require('@/utils/apiError.utils')
+const { WHITELIST_DOMAINS } = require('@/utils/constants.utils')
 const { StatusCodes } = require('http-status-codes')
 
 const corsOptions = {

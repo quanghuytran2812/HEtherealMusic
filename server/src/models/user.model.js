@@ -1,8 +1,8 @@
-const { enumData } = require('@/utils/constants')
+const { enumData } = require('@/utils/constants.utils')
 const Joi = require('joi')
 const mongoose = require('mongoose')
-const { customValidation } = require('@/validations')
 const bcrypt = require('bcryptjs')
+const { messages, validateDob, passwordModelRegex } = require('@/validations/custom.validation')
 
 const userSchema = mongoose.Schema(
   {
@@ -12,8 +12,7 @@ const userSchema = mongoose.Schema(
     verifyToken: String,
     password: String,
     dob: Date,
-    imageUrl: String,
-    genres: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Genre' }],
+    imageUrl: [String],
     popularity: { type: Number, default: 0 },
     gender: { type: String, enum: enumData.gender },
     type: {
@@ -27,44 +26,43 @@ const userSchema = mongoose.Schema(
 )
 
 const schema = Joi.object({
-  email: Joi.string().required().trim().email().messages({
-    'string.empty': customValidation.messages.email.required,
-    'string.email': customValidation.messages.email.invalid
+  email: Joi.string().trim().required().email().messages({
+    'string.empty': messages.email.required,
+    'string.email': messages.email.invalid
   }),
-  password: Joi.string()
-    .required()
-    .trim()
-    .min(10)
-    .regex(customValidation.passwordModelRegex)
+  password: Joi.string().trim().required().min(10).regex(passwordModelRegex).optional().messages({
+    'string.empty': messages.password.required,
+    'string.pattern.base': messages.password.base,
+    'string.min': messages.password.min
+  }),
+  name: Joi.string().trim().required().min(3).max(30).messages({
+    'string.empty': messages.name.required,
+    'string.min': messages.name.min,
+    'string.max': messages.name.max
+  }),
+  dob: Joi.string().trim().required().custom(validateDob).messages({
+    'string.empty': messages.dob.required,
+    'any.custom': messages.dob.type,
+    'any.invalid': messages.dob.invalid
+  }),
+  gender: Joi.string().trim().required().valid(...Object.values(enumData.gender)).messages({
+    'string.empty': messages.gender.required,
+    'any.only': messages.gender.invalid
+  }),
+  imageUrl: Joi.array().items(Joi.string())
+    .min(1)
     .optional()
     .messages({
-      'string.empty': customValidation.messages.password.required,
-      'string.pattern.base': customValidation.messages.password.base,
-      'string.min': customValidation.messages.password.min
+      'array.min': messages.imageUrl.required
     }),
-  name: Joi.string().required().trim().messages({
-    'string.empty': customValidation.messages.name.required
+  verified_email: Joi.boolean().optional().messages({
+    'boolean.base': messages.verified_email.invalid,
+    'any.only': messages.verified_email.notBoolean
   }),
-  dob: Joi.string()
-    .required()
-    .trim()
-    .custom(customValidation.validateDob)
-    .messages({
-      'string.empty': customValidation.messages.dob.required,
-      'any.custom': customValidation.messages.dob.type,
-      'any.invalid': customValidation.messages.dob.invalid
-    }),
-  gender: Joi.string()
-    .required()
-    .valid(...Object.values(enumData.gender))
-    .trim()
-    .messages({
-      'string.empty': customValidation.messages.gender.required,
-      'any.only': customValidation.messages.gender.invalid
-    }),
-  imageUrl: Joi.string().optional().trim(),
-  verified_email: Joi.boolean().optional(),
-  verifyToken: Joi.string().optional()
+  verifyToken: Joi.string().optional().allow('').messages({
+    'string.base': messages.verifyToken.invalid,
+    'string.empty': messages.verifyToken.empty
+  })
 })
 // Indicates which Fields we do not allow to be updated in the updateUser()
 const INVALID_UPDATE_FIELD = ['_id', 'email', 'createdAt']
@@ -111,10 +109,19 @@ const findUserById = async (id) => {
   }
 }
 
+const checkUsersExist = async (data) => {
+  try {
+    const users = await User.find({ _id: { $in: data } })
+    return users
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 const updateUser = async (id, data) => {
   try {
     // Remove fields that are not permitted to be modified.
-    Object.keys(data).forEach(fieldName => {
+    Object.keys(data).forEach((fieldName) => {
       if (INVALID_UPDATE_FIELD.includes(fieldName)) {
         delete data[fieldName]
       }
@@ -137,5 +144,6 @@ module.exports = {
   checkUserFromEmail,
   comparePassword,
   findUserById,
-  updateUser
+  updateUser,
+  checkUsersExist
 }

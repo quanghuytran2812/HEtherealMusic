@@ -94,11 +94,11 @@ const ProfileUpdateDialog = ({ triggerContent }: ProfileUpdateDialogProps) => {
           >
             <div className="h-[180px] w-[180px] relative group col-start-1 row-start-1 row-end-5">
               <div className="flex relative h-full">
-                {me?.imageUrl ? (
+                {me?.imageUrl[me?.imageUrl.length - 1] ? (
                   <div className="h-full w-full select-none">
                     <img
                       className="w-full h-full object-cover object-center rounded-full"
-                      src={me?.imageUrl}
+                      src={me?.imageUrl[me?.imageUrl.length - 1]}
                       alt={me?.name}
                     />
                   </div>

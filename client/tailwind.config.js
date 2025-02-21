@@ -51,6 +51,9 @@ export default {
           5: "hsl(var(--chart-5))",
         },
       },
+      boxShadow: {
+        'card-shadow': '0px 8px 20px -10px #bbbbbb'
+      }
     },
   },
   plugins: [

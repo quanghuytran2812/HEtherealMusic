@@ -34,7 +34,7 @@ const UserAuthentication = () => {
       />
       <DropdownMenuCustom
         avatar={{
-          imageUrl: me?.imageUrl || "",
+          imageUrl: me?.imageUrl[me?.imageUrl.length - 1] || "",
           name: me?.name || "User",
         }}
         items={Menu}

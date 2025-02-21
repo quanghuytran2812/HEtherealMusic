@@ -44,10 +44,10 @@ const ProfileHeader = () => {
       <div className="px-5 pb-5 flex justify-start items-center h-full">
         <div className="mr-5 h-full flex flex-col justify-end group">
           <div className="relative flex items-center justify-center bg-[#282828] size-[158px] rounded-full">
-            {me?.imageUrl ? (
+            {me?.imageUrl[me?.imageUrl.length - 1] ? (
               <img
                 className="w-full h-full object-cover object-center rounded-full"
-                src={me?.imageUrl}
+                src={me?.imageUrl[me?.imageUrl.length - 1]}
                 alt={me?.name}
               />
             ) : (

@@ -6,10 +6,10 @@ const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
 const { env } = require('@/config/environment.config')
-const CONNECT_DB = require('@/config/db')
+const CONNECT_DB = require('@/config/db.config')
 const routes = require('@/routes/v1')
-const errorHandlingMiddleware = require('@/middlewares/errorHandlingMiddleware')
-const { corsOptions } = require('@/config/cors')
+const errorHandlingMiddleware = require('@/middlewares/errorHandling.middleware')
+const { corsOptions } = require('@/config/cors.config')
 const cookieParser = require('cookie-parser')
 
 // Create an Express app

@@ -46,7 +46,7 @@ const DropdownMenuCustom = ({
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         {avatar ? (
-          <Avatar className="size-8">
+          <Avatar className="size-9 object-cover object-center">
             <AvatarImage src={avatar?.imageUrl} />
             <AvatarFallback>{avatar?.name}</AvatarFallback>
           </Avatar>

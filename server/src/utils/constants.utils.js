@@ -5,8 +5,11 @@ const WHITELIST_DOMAINS = [
 ]
 
 const enumData = {
+  loginType: ['password', 'google'],
   userType: ['user', 'admin', 'artist'],
-  gender: ['male', 'female', 'other']
+  gender: ['male', 'female', 'other'],
+  songType: ['song', 'podcast'],
+  albumType: ['single', 'album']
 }
 
 module.exports = { WHITELIST_DOMAINS, enumData }

@@ -7,3 +7,4 @@ export { default as TermsAndConditions } from "./TermsAndConditions";
 export { default as StepFormContainer } from "./StepFormContainer";
 export { default as PasswordValidation } from "./PasswordValidation";
 export { default as LoginForm } from "./LoginForm";
+export { default as FormSelect } from "./FormSelect";

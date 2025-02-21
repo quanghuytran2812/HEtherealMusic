@@ -1,5 +1,5 @@
 const { authService } = require('@/services')
-const catchAsync = require('@/utils/catchAsync')
+const catchAsync = require('@/utils/catchAsync.utils')
 const { StatusCodes } = require('http-status-codes')
 
 const loginWithGmail = catchAsync(async (req, res) => {
@@ -16,7 +16,9 @@ const loginWithGmail = catchAsync(async (req, res) => {
     sameSite: 'none',
     maxAge: 7 * 24 * 60 * 60 * 1000
   })
-  res.status(StatusCodes.OK).send({ success: user.success, message: user.message })
+  res
+    .status(StatusCodes.OK)
+    .send({ success: user.success, message: user.message })
 })
 
 const logout = catchAsync(async (req, res) => {

@@ -1,2 +1,5 @@
 module.exports.userService = require('./user.service')
 module.exports.authService = require('./auth.service')
+module.exports.songService = require('./song.service')
+module.exports.albumService = require('./album.service')
+module.exports.genreService = require('./genre.service')

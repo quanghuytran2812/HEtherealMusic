@@ -97,4 +97,10 @@ export const endpoints = {
     getMe: "/users/me",
     updateUser: "/users/update-user",
   },
+  genre: {
+    getAllGenres: "/genre/get-all-genres",
+  },
+  song: {
+    createSong: "/song/create-new-song",
+  }
 };

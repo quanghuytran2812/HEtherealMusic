@@ -156,6 +156,59 @@ export const dataLikeSong = [
   },
 ];
 
+export const dataGenre = [
+  {
+    _id: 1,
+    title: "Music",
+    image: "https://i.scdn.co/image/ab67fb8200005caf474a477debc822a3a45c5acb"
+  },
+  {
+    _id: 2,
+    title: "Podcasts",
+    image: "https://i.scdn.co/image/ab6765630000ba8a81f07e1ead0317ee3c285bfa"
+  },
+  {
+    _id: 3,
+    title: "Live Events",
+    image: "https://concerts.spotifycdn.com/images/live-events_category-image.jpg"
+  },
+  {
+    _id: 4,
+    title: "Made For You",
+    image: "https://t.scdn.co/images/ea364e99656e46a096ea1df50f581efe"
+  },
+  {
+    _id: 5,
+    title: "Pop",
+    image: "https://i.scdn.co/image/ab67fb8200005caf66d545e6a69d0bfe8bd1e825"
+  },
+  {
+    _id: 6,
+    title: "K-pop",
+    image: "https://i.scdn.co/image/ab67fb8200005caf4b42030ee01cf793663dbb73"
+  },
+  {
+    _id: 7,
+    title: "K-pop",
+    image: "https://i.scdn.co/image/ab67fb8200005caf4b42030ee01cf793663dbb73"
+  },
+  {
+    _id: 8,
+    title: "K-pop",
+    image: "https://i.scdn.co/image/ab67fb8200005caf4b42030ee01cf793663dbb73"
+  },
+  {
+    _id: 9,
+    title: "K-pop",
+    image: "https://i.scdn.co/image/ab67fb8200005caf4b42030ee01cf793663dbb73"
+  },
+  {
+    _id: 10,
+    title: "K-pop",
+    image: "https://i.scdn.co/image/ab67fb8200005caf4b42030ee01cf793663dbb73"
+  }
+]
+
 export const enumData = {
   userType: ["user", "admin", "artist"],
   gender: [

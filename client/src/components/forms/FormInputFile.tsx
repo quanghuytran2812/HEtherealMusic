@@ -7,7 +7,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 interface FormInputFileProps {
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any;
   name: string;

@@ -1,14 +1,16 @@
 import App from "./App";
 import { pathname } from "./lib/pathname";
+import { AdminLayout, SongPage } from "./pages/admin";
 import {
   AccountVerification,
+  GenrePage,
   HomePage,
   LoginPage,
+  NotFoundPage,
   PublicLayout,
   SearchPage,
   SignupPage,
 } from "./pages/public";
-import NotFoundPage from "./pages/public/NotFoundPage";
 import { ProfilePage } from "./pages/user";
 
 const routes = [
@@ -27,6 +29,10 @@ const routes = [
           {
             path: pathname.publics.searchpage,
             element: <SearchPage />,
+          },
+          {
+            path: pathname.publics.genre,
+            element: <GenrePage />,
           },
           {
             path: pathname.publics.profile,
@@ -50,6 +56,16 @@ const routes = [
         path: pathname.publics.notFound,
         element: <NotFoundPage />,
       },
+      {
+        path: pathname.admin.layout,
+        element: <AdminLayout />,
+        children: [
+          {
+            path: pathname.admin.song,
+            element: <SongPage />,
+          },
+        ],
+      }
     ],
   },
 ];

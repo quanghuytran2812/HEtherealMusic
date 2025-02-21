@@ -19,7 +19,7 @@ export interface User {
   name: string;
   dob: string;
   gender: string;
-  imageUrl: string;
+  imageUrl: string[];
   genres: string[];
   popularity: number;
   type: string;
@@ -62,3 +62,20 @@ export interface UpdateUserData {
   name?: string;
   imageUrl?: File;
 }
+
+export interface CreateSongData {
+  title?: string;
+  imageUrl?: File;
+  audioUrl?: File;
+  duration?: string;
+  isExplicit?: boolean;
+  type?: string;
+  artists?: string[];
+  albums?: string;
+}
+
+export interface GenreItem {
+  _id: string;
+  genre_name: string;
+  image_url: string;
+};

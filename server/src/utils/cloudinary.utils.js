@@ -8,13 +8,16 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-const streamUpload = (fileBuffer, folderName) => {
+const streamUpload = (fileBuffer, folderName, resourceType = 'auto') => {
   return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream({ folder: folderName }, (error, result) => {
-      if (error) return reject(error)
-      resolve(result)
-    })
-    return streamifier.createReadStream(fileBuffer).pipe(stream)
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: folderName, resource_type: resourceType },
+      (error, result) => {
+        if (error) return reject(error)
+        resolve(result)
+      }
+    )
+    streamifier.createReadStream(fileBuffer).pipe(stream)
   })
 }
 

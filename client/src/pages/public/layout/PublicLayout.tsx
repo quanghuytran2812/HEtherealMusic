@@ -23,7 +23,7 @@ const PublicLayout = () => {
   }, []);
   
   return (
-    <div className="h-full bg-white dark:bg-[#000000] flex flex-col p-2 gap-2">
+    <div className="h-full dark:bg-[#000000] flex flex-col p-2 gap-2">
       <Header />
       <ResizablePanelGroup
         direction="horizontal"

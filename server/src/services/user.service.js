@@ -1,32 +1,39 @@
 const { User } = require('@/models')
-const ApiError = require('@/utils/ApiError')
 const { StatusCodes } = require('http-status-codes')
 const bcrypt = require('bcryptjs')
-const { BrevoEmail } = require('@/utils/BrevoEmail')
+const { BrevoEmail } = require('@/utils/brevoEmail.utils')
 const { env } = require('@/config/environment.config')
 import { v4 as uuidv4 } from 'uuid'
 import { CloudinaryProvider } from '@/utils/cloudinary.utils'
+import { pickKeysFromUser } from '@/utils/helper.utils'
+import { ApiError } from '@/utils/apiError.utils'
 
-const hashPassword = (password) => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+const hashPassword = (password) =>
+  bcrypt.hashSync(password, bcrypt.genSaltSync(10))
 
 const createUser = async (userBody) => {
-  const { email, verified_email, password } = userBody
+  const { email, verified_email, password, imageUrl } = userBody
 
   // Check if email already exists
   if (await User.checkUserFromEmail(email)) {
-    throw new ApiError(StatusCodes.NOT_FOUND, 'Email already exists')
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Account not found!')
   }
 
   // Prepare user data
-  const userData = verified_email && !password
-    ? { ...userBody }
-    : { ...userBody, password: hashPassword(password), verifyToken: uuidv4() }
+  const userData =
+    verified_email && !password
+      ? { ...userBody, imageUrl: [imageUrl] }
+      : {
+        ...userBody,
+        password: hashPassword(password),
+        verifyToken: uuidv4()
+      }
 
   // Create new user in the database
   const createdUser = await User.createNewUser(userData)
 
   if (!verified_email && createdUser) {
-  // Generate verification token and link
+    // Generate verification token and link
     const verificationLink = `${env.CLIENT_URL}/account/verification?email=${email}&token=${createdUser.verifyToken}`
 
     // Send verification email
@@ -37,20 +44,21 @@ const createUser = async (userBody) => {
 }
 
 const sendVerificationEmail = async (recipientEmail, verificationLink) => {
-  const subject = 'Xác nhận địa chỉ email của bạn'
+  const subject = 'Confirm your email address'
   const htmlContent = generateEmailContent(verificationLink)
 
   await BrevoEmail.sendEmail({ recipientEmail, subject, htmlContent })
 }
 
-const logoImage = 'https://res.cloudinary.com/dvsokroe6/image/upload/v1739503783/users/dcwgzprdkuxqpfgdavvw.png'
+const logoImage =
+  'https://res.cloudinary.com/dvsokroe6/image/upload/v1739503783/users/dcwgzprdkuxqpfgdavvw.png'
 const generateEmailContent = (verificationLink) => `
 <html>
 <head>
   <style>
     .container { max-width: 600px; margin: 0 auto; }
     .header { display: flex; }
-    .header img { width: 80px; height: 74px; }
+    .header img { width: 80px; height: 74px; border: 1px solid #000; border-radius: 50%; margin-right: 10px; }
     .header p { font-size: x-large; color: #1ed760;}
     a { text-decoration: none; }
     .content { text-align: center; max-width: 450px; }
@@ -67,9 +75,9 @@ const generateEmailContent = (verificationLink) => `
       <p>HEthereal</p>
     </a>
     <div class="content">
-      <p class="title">Bảo mật tài khoản của bạn.</p>
-      <p class="description">Xác nhận địa chỉ email để bạn luôn truy cập được vào tài khoản của mình và nhận thông tin quan trọng từ chúng tôi.</p>
-      <a class="button" target="_blank" rel="noopener noreferrer" href="${verificationLink}"><p>XÁC NHẬN EMAIL</p></a>
+      <p class="title">Keep your account safe.</p>
+      <p class="description">Verify your email address so you can access your account and get critical information from us at any time.</p>
+      <a class="button" target="_blank" rel="noopener noreferrer" href="${verificationLink}"><p>VERIFY EMAIL</p></a>
     </div>
   </div>
 </body>
@@ -79,29 +87,55 @@ const getMe = async (user) => {
   const { uid } = user
   const response = await User.findUserById(uid)
 
-  return { success: !!response, user: response }
+  const pickedData = pickKeysFromUser(response)
+  return { success: !!response, user: pickedData }
 }
 
 const updateUser = async (id, reqBody, fileImage) => {
   const existsUser = await User.findUserById(id)
 
-  if (!existsUser) throw new ApiError(StatusCodes.NOT_FOUND, 'Account not found!')
-  if (existsUser.isDeleted) throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Your account has been locked due to too many unsuccessful login attempts. Please contact support!')
-  if (!existsUser.verified_email) throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Your email has not been verified!')
+  if (!existsUser)
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Account not found!')
+  if (existsUser.isDeleted)
+    throw new ApiError(
+      StatusCodes.NOT_ACCEPTABLE,
+      'Your account has been locked due to too many unsuccessful login attempts. Please contact support!'
+    )
+  if (!existsUser.verified_email)
+    throw new ApiError(
+      StatusCodes.NOT_ACCEPTABLE,
+      'Your email has not been verified!'
+    )
 
   let updateUser = {}
   if (reqBody.current_password && reqBody.new_password) {
-    const isPasswordValid = await User.comparePassword(reqBody.current_password, existsUser.password)
+    const isPasswordValid = await User.comparePassword(
+      reqBody.current_password,
+      existsUser.password
+    )
 
     if (!isPasswordValid) {
-      throw new ApiError(StatusCodes.NOT_ACCEPTABLE, 'Invalid current password!')
+      throw new ApiError(
+        StatusCodes.NOT_ACCEPTABLE,
+        'Invalid current password!'
+      )
     }
 
-    updateUser = await User.updateUser(existsUser._id, { password: hashPassword(reqBody.new_password) })
+    updateUser = await User.updateUser(existsUser._id, {
+      password: hashPassword(reqBody.new_password)
+    })
   } else if (fileImage) {
-    const uploadedFile = await CloudinaryProvider.streamUpload(fileImage.buffer, 'users')
+    const uploadedFile = await CloudinaryProvider.streamUpload(
+      fileImage.buffer,
+      'users',
+      'image'
+    )
 
-    updateUser = await User.updateUser(existsUser._id, { name: reqBody.name, imageUrl: uploadedFile.secure_url })
+    updateUser = await User.updateUser(existsUser._id, {
+      name: reqBody.name,
+      imageUrl: existsUser.imageUrl.length > 0 ?
+        [...existsUser.imageUrl, uploadedFile.secure_url] : [uploadedFile.secure_url]
+    })
   } else {
     updateUser = await User.updateUser(existsUser._id, { name: reqBody.name })
   }

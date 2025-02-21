@@ -14,6 +14,8 @@ import {
 import TermsAndConditions from "./TermsAndConditions";
 import FormPasswordInput from "./FormPasswordInput";
 import { classname } from "@/lib/classname";
+import { useEffect } from "react";
+import { useMeStore } from "@/stores/useMeStore";
 
 interface StepFormContainerProps {
   currentStep: number;
@@ -34,6 +36,7 @@ const StepFormContainer = ({
   totalSteps,
   setCurrentStep,
 }: StepFormContainerProps) => {
+  const { registerData } = useMeStore();
 
   const forms = {
     email: useCreateForm(emailValidator, { email: "" }),
@@ -44,6 +47,15 @@ const StepFormContainer = ({
     }),
     terms: useCreateForm(termsAndConditionsValidator, { items: [] }),
   };
+
+    useEffect(() => {
+      if (registerData?.name) {
+        forms.userInfo.reset({
+          name: registerData.name || "",
+          dob: { day: undefined, month: undefined, year: undefined }
+        });
+      }
+    }, [registerData?.name, forms.userInfo]);
 
   const stepsContent = [
     {
