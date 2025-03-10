@@ -102,5 +102,10 @@ export const endpoints = {
   },
   song: {
     createSong: "/song/create-new-song",
+  },
+  album: {
+    newRelease: "/album/new-release-albums",
+    getAlbumById: "/album/get-album-by-id/",
+    getAllAlbumsByArtist: "/album/get-all-albums-by-artist/",
   }
 };

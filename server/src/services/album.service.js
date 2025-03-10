@@ -20,6 +20,24 @@ const createNewAlbum = async (data) => {
   return createdAlbum
 }
 
+const getNewReleaseAlbums = async () => {
+  const albums = await Album.findNewReleaseAlbums()
+  return albums
+}
+
+const getAlbumById = async (albumId) => {
+  const album = await Album.findAlbumById(albumId)
+  return album
+}
+
+const getAllAlbumsByArtist = async (artistId) => {
+  const albums = await Album.findAllAlbumsByArtist(artistId)
+  return albums
+}
+
 module.exports = {
-  createNewAlbum
+  createNewAlbum,
+  getNewReleaseAlbums,
+  getAlbumById,
+  getAllAlbumsByArtist
 }

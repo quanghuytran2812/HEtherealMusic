@@ -49,6 +49,7 @@ const FormInput = ({
               type={type}
               className={classInput}
               placeholder={placeholder}
+              autoComplete="off"
               {...field}
             />
           </FormControl>

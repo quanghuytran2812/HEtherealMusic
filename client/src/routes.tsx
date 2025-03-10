@@ -1,8 +1,10 @@
 import App from "./App";
 import { pathname } from "./lib/pathname";
 import { AdminLayout, SongPage } from "./pages/admin";
+import { ProtectedRoute } from "./pages/auth";
 import {
   AccountVerification,
+  AlbumPage,
   GenrePage,
   HomePage,
   LoginPage,
@@ -35,8 +37,17 @@ const routes = [
             element: <GenrePage />,
           },
           {
-            path: pathname.publics.profile,
-            element: <ProfilePage />,
+            element: <ProtectedRoute allowedRoles={["user"]} />,
+            children: [
+              {
+                path: pathname.publics.profile,
+                element: <ProfilePage />,
+              },
+              {
+                path: pathname.publics.album,
+                element: <AlbumPage />,
+              },
+            ],
           },
         ],
       },
@@ -57,15 +68,20 @@ const routes = [
         element: <NotFoundPage />,
       },
       {
-        path: pathname.admin.layout,
-        element: <AdminLayout />,
+        element: <ProtectedRoute allowedRoles={["admin"]} />,
         children: [
           {
-            path: pathname.admin.song,
-            element: <SongPage />,
+            path: pathname.admin.layout,
+            element: <AdminLayout />,
+            children: [
+              {
+                path: pathname.admin.song,
+                element: <SongPage />,
+              },
+            ],
           },
         ],
-      }
+      },
     ],
   },
 ];

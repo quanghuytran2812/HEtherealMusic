@@ -1,9 +1,16 @@
 import { Card } from "@/components/cards";
 import { FooterMainContent } from "@/components/footers";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useAlbumStore } from "@/stores/useAlbumStore";
 import { dataAlums, dataArtist, dataPlaylist } from "@/utils/contants";
+import { useEffect } from "react";
 
 const HomePage = () => {
+  const { albums, getAlbums } = useAlbumStore();
+
+  useEffect(() => {
+    getAlbums();
+  }, [getAlbums]);
   return (
     <div className="w-[calc(100% + 0px)] overflow-hidden">
       <ScrollArea className="h-[calc(100vh-105px)] rounded-lg bg-[#121212]">
@@ -15,7 +22,7 @@ const HomePage = () => {
               {/* Popular albums and singles */}
               <Card title="Popular albums and singles" items={dataAlums} />
               {/* Popular radio */}
-              <Card title="Popular radio" items={dataAlums} />
+              <Card title="New Releases" items={albums} link="album"/>
               {/* Featured Charts */}
               <Card title="Featured Charts" items={dataPlaylist} />
               {/* Playlists from our editors */}

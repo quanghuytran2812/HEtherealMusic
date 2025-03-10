@@ -7,7 +7,11 @@ const albumSchema = mongoose.Schema(
   {
     title: String,
     image_url: String,
-    type: { type: String, enum: enumData.albumType, default: enumData.albumType[0] }, // 1 for single, 2 for album
+    type: {
+      type: String,
+      enum: enumData.albumType,
+      default: enumData.albumType[0]
+    }, // 1 for single, 2 for album
     genres: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Genre' }],
     artists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     songs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Song' }]
@@ -23,10 +27,14 @@ const schema = Joi.object({
   image_url: Joi.string().trim().required().messages({
     'string.empty': messageAlbum.image_url.required
   }),
-  type: Joi.string().trim().required().valid(...Object.values(enumData.albumType)).messages({
-    'string.empty': messageAlbum.type.required,
-    'any.only': messageAlbum.type.valid
-  }),
+  type: Joi.string()
+    .trim()
+    .required()
+    .valid(...Object.values(enumData.albumType))
+    .messages({
+      'string.empty': messageAlbum.type.required,
+      'any.only': messageAlbum.type.valid
+    }),
   genres: Joi.array()
     .items(Joi.string().required())
     .min(1)
@@ -75,7 +83,32 @@ const createNewAlbum = async (data) => {
 const findAlbumById = async (id) => {
   try {
     const album = await Album.findById(id)
-    return album
+      .populate({
+        path: 'artists',
+        select: '_id name'
+      })
+      .populate({
+        path: 'songs',
+        select: '-albums -updatedAt -createdAt', // Exclude albums and updatedAt, createdAt
+        populate: {
+          path: 'artists', // Populate artists for each song
+          select: '_id name' // Only select artist names
+        }
+      })
+      .lean()
+
+    return {
+      _id: album._id,
+      title: album.title,
+      image_url: album.image_url,
+      type: album.type,
+      artists: album.artists,
+      songs: album.songs.map((song) => ({
+        ...song,
+        artists: song.artists
+      })),
+      createdAt: album.createdAt
+    }
   } catch (error) {
     throw new Error(error)
   }
@@ -89,6 +122,48 @@ const findAlbumByIdAndUpdate = async (albums, song) => {
       { new: true }
     )
     return album
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const findNewReleaseAlbums = async () => {
+  try {
+    const currentDate = new Date()
+    const thirtyDaysAgo = new Date(
+      currentDate.setDate(currentDate.getDate() - 30)
+    )
+
+    const newReleases = await Album.find({
+      createdAt: { $gte: thirtyDaysAgo }
+    })
+      .populate('artists', 'name')
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .lean()
+
+    return newReleases.map((album) => ({
+      _id: album._id,
+      title: album.title,
+      imageUrl: album.image_url,
+      artists: album.artists.map((artist) => artist.name).join(', ')
+    }))
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const findAllAlbumsByArtist = async (artistId) => {
+  try {
+    const albums = await Album.find({ artists: artistId })
+      .populate('artists', 'name')
+      .lean()
+    return albums.map((album) => ({
+      _id: album._id,
+      title: album.title,
+      image_url: album.image_url,
+      createdAt: album.createdAt
+    }))
   } catch (error) {
     throw new Error(error)
   }
@@ -119,5 +194,7 @@ module.exports = {
   createNewAlbum,
   updateAlbum,
   findAlbumByIdAndUpdate,
-  findAlbumById
+  findAlbumById,
+  findNewReleaseAlbums,
+  findAllAlbumsByArtist
 }

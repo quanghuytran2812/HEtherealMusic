@@ -26,16 +26,32 @@ export interface User {
 };
 
 export interface Album {
-  _id: number;
+  _id: string;
   title: string;
-  imageUrl: string;
-  artist?: string; // Optional for albums
+  image_url: string;
+  type?: string;
+  createdAt?: string;
+  artists?: Artist[];
+  songs?: [Song]
 };
 
-export interface Artist {
-  _id: number;
+export interface Song {
+  _id: string;
   title: string;
-  imageUrl: string;
+  image_url: string;
+  audio_url: string;
+  duration: number;
+  isExplicit?: boolean;
+  type?: string;
+  artists?: Artist[];
+  albumName?: string;
+  popularity?: number;
+  views?: number;
+}
+
+export interface Artist {
+  _id: string;
+  name: string;
 };
 
 export interface Playlist {

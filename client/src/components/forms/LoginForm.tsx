@@ -10,10 +10,10 @@ import { emailValidator, passwordValidator } from "@/utils/validators";
 import { loginData } from "@/utils/types";
 import { apiLoginWithGmail } from "@/apis/auth";
 import { toast } from "sonner";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useMeStore } from "@/stores/useMeStore";
 import { NotificationAlert } from "../alerts";
-import { classname } from "@/lib/classname";
+import { formInput } from "@/lib/classname";
 
 const notificationMessages = {
   registered: (email: string) => (
@@ -36,6 +36,8 @@ const LoginForm = () => {
   const registeredEmail = searchParams.get("registeredEmail");
   const verifiedEmail = searchParams.get("verifiedEmail");
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   const form = useForm<
     z.infer<typeof emailValidator & typeof passwordValidator>
@@ -75,7 +77,7 @@ const LoginForm = () => {
       loading: "Logging in...",
       success: (data: any) => {
         setIsAuthenticated(true);
-        navigate("/");
+        navigate(from, { replace: true });
         return data?.message;
       },
     });
@@ -106,7 +108,7 @@ const LoginForm = () => {
             label="Địa chỉ email"
             name="email"
             placeholder="name@domain.com"
-            classInput={classname.formInput}
+            classInput={formInput}
           />
           <FormPasswordInput
             form={form}

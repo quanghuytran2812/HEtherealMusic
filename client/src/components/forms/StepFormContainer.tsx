@@ -13,7 +13,7 @@ import {
 } from "@/utils/validators";
 import TermsAndConditions from "./TermsAndConditions";
 import FormPasswordInput from "./FormPasswordInput";
-import { classname } from "@/lib/classname";
+import { formInput } from "@/lib/classname";
 import { useEffect } from "react";
 import { useMeStore } from "@/stores/useMeStore";
 
@@ -67,7 +67,7 @@ const StepFormContainer = ({
           label="Địa chỉ email"
           name="email"
           placeholder="name@domain.com"
-          classInput={classname.formInput}
+          classInput={formInput}
         />
       ),
     },
@@ -93,7 +93,7 @@ const StepFormContainer = ({
             label="Tên"
             desc="Tên này sẽ xuất hiện trên hồ sơ của bạn"
             name="name"
-            classInput={classname.formInput}
+            classInput={formInput}
           />
           <DateOfBirthInput form={forms.userInfo} label="Ngày sinh" />
           <GenderInput form={forms.userInfo} name="gender" label="Giới tính" />

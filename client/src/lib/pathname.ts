@@ -10,6 +10,7 @@ export const pathname = {
     profile: "profile",
     setting: "setting",
     genre: "genre/:genreId",
+    album: "album/:albumId",
   },
   users: {
     layout: "/members",

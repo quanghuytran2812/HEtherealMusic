@@ -99,7 +99,7 @@ const StepForm = ({
   return (
     <div>
       {step !== 0 && (
-        <div className="-mx-[56px] mb-3">
+        <div className="mb-3">
           <div className="bg-[#818181] h-0.5">
             <div
               className={`bg-[#1ed760] h-0.5 transition-all duration-200`}
@@ -108,7 +108,7 @@ const StepForm = ({
               }}
             />
           </div>
-          <div className="flex">
+          <div className="flex -mx-[15px]">
             <div className="flex items-center">
               <Button
                 className="p-4"
