@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
 
 export const dataPlaylist = [
   {
@@ -218,15 +218,15 @@ export const enumData = {
   gender: [
     {
       value: "male",
-      label: "Nam",
+      label: "Male",
     },
     {
       value: "female",
-      label: "Nữ",
+      label: "Female",
     },
     {
       value: "other",
-      label: "Giới tính khác",
+      label: "Other",
     },
   ],
 };
@@ -269,9 +269,10 @@ export const planLinks = [
 ];
 
 export const socialLinks = [
-  { href: "https://www.instagram.com/spotify/", icon: Instagram },
-  { href: "https://x.com/spotify", icon: Twitter },
-  { href: "https://www.facebook.com/Spotify", icon: Facebook },
+  { href: "#", icon: Youtube },
+  { href: "#", icon: Instagram },
+  { href: "#", icon: Twitter  },
+  { href: "#", icon: Linkedin  }
 ];
 
 export const legalLinks = [
@@ -282,3 +283,34 @@ export const legalLinks = [
   { href: "#", text: "About Ads" },
   { href: "#", text: "Accessibility" },
 ];
+
+export const filterItems = [
+  {
+    filterType: 'all',
+    text: "All"
+  },
+  {
+    filterType: 'songs',
+    text: "Songs"
+  },
+  {
+    filterType: 'playlists',
+    text: "Playlists"
+  },
+  {
+    filterType: 'albums',
+    text: "Albums"
+  },
+  {
+    filterType: 'artists',
+    text: "Artists"
+  },
+  {
+    filterType: 'users',
+    text: "Profiles"
+  },
+  {
+    filterType: 'genres',
+    text: "Genres & Moods"
+  }
+]

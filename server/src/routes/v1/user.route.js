@@ -11,5 +11,9 @@ router.put('/update-user',
   multerUploadMiddleware.upload.single('imageUrl'),
   userValidation.updateUser,
   userController.updateUser)
+router.get('/recommend-artists', authMiddleware.isAuthorized, userController.getRecommendArtists)
+router.get('/top/:type', authMiddleware.isAuthorized, userController.getTop)
+router.get('/get-user-by-id/:userId', userController.getUserById)
+router.get('/get-artist-top-tracks/:artistId', userController.getArtistTopTracks)
 
 module.exports = router

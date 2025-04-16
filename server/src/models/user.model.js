@@ -102,8 +102,17 @@ const comparePassword = async (inputPassword, storedPassword) => {
 
 const findUserById = async (id) => {
   try {
-    const user = await User.findById(id)
+    const user = await User.findById(id).lean()
     return user
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const findArtistById = async (id) => {
+  try {
+    const user = await User.findOne({ _id: id, type: 'artist' }).lean()
+    return user ? user : null
   } catch (error) {
     throw new Error(error)
   }
@@ -116,6 +125,65 @@ const checkUsersExist = async (data) => {
   } catch (error) {
     throw new Error(error)
   }
+}
+
+const getRandomArtist = async () => {
+  try {
+    const randomArtists = await User.aggregate([
+      { $match: { type: 'artist' } },
+      { $sample: { size: 2 } },
+      { $project: { _id: 1 } }
+    ])
+    return randomArtists
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const findRecommendArtists = async (artistIds) => {
+  try {
+    const recommendations = await User.find({ _id: { $in: artistIds } }).select('_id name imageUrl type').limit(5).lean()
+    return recommendations.map((artist) => ({
+      _id: artist._id,
+      name: artist.name,
+      image_url: artist.imageUrl[artist.imageUrl.length - 1],
+      type: artist.type
+    }))
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+// Add to your User model exports
+const searchArtists = async (query, limit = 5) => {
+  return await User.aggregate([
+    {
+      $match: {
+        name: { $regex: query, $options: 'i' },
+        type: 'artist'
+      }
+    },
+    { $limit: limit },
+    { $project: {
+      _id: 1,
+      name: 1,
+      image_url: { $arrayElemAt: ['$imageUrl', -1] },
+      type: 1
+    } }
+  ])
+}
+
+const searchUsers = async (query, limit = 5) => {
+  return await User.aggregate([
+    { $match: { name: { $regex: query, $options: 'i' }, type: 'user' } },
+    { $limit: limit },
+    { $project: {
+      _id: 1,
+      name: 1,
+      image_url: { $arrayElemAt: ['$imageUrl', -1] },
+      type: 1
+    } }
+  ])
 }
 
 const updateUser = async (id, data) => {
@@ -145,5 +213,10 @@ module.exports = {
   comparePassword,
   findUserById,
   updateUser,
-  checkUsersExist
+  checkUsersExist,
+  getRandomArtist,
+  findRecommendArtists,
+  findArtistById,
+  searchArtists,
+  searchUsers
 }

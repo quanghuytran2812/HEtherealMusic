@@ -24,8 +24,14 @@ const getGenreById = async (id) => {
   return genre
 }
 
+const getGenreByName = async (name) => {
+  const genre = await Genre.findGenreByGenreName(name)
+  return genre
+}
+
 module.exports = {
   createNewGenre,
   getAllGenres,
-  getGenreById
+  getGenreById,
+  getGenreByName
 }

@@ -1,3 +1,5 @@
+import React from "react";
+
 interface AccountLinkProps {
   step?: number;
   variant?: "login" | "signup"; // Better type definition
@@ -5,42 +7,42 @@ interface AccountLinkProps {
 
 // Component for signup-related links
 const ExistingAccountPrompt = () => (
-  <p className="mt-8">
-    <span className="block text-center text-[#656565]">
-      Bạn đã có tài khoản?
+  <div className="mt-8 text-center">
+    <span className="text-sm text-[#656565]">
+      Already have an account?
       <a
         href="/login"
-        className="pl-1 text-white underline cursor-pointer"
+        className="pl-1 text-white underline cursor-pointer hover:text-[#1ed760] transition-colors"
       >
-        Đăng nhập tại đây
+        Sign In
       </a>
     </span>
-  </p>
+  </div>
 );
 
 // Component for login-related links
 const LoginLinks = () => (
-  <div>
+  <React.Fragment>
     <div className="flex justify-center my-6">
       <a
-        className="underline hover:text-[#1ed760] transition-colors"
+        className="underline text-sm hover:text-[#1ed760] transition-colors"
         href="#"
       >
-        Quên mật khẩu của bạn?
+        Forgot your password?
       </a>
     </div>
     <div className="pb-4 text-center">
-      <span className="text-[#b3b3b3] pr-1 text-base font-normal">
-        Bạn chưa có tài khoản?
+      <span className="text-[#b3b3b3] pr-1 text-sm font-normal">
+        Don't have an account?
       </span>
       <a
-        className="text-base font-normal underline hover:text-[#1ed760] transition-colors"
+        className="text-sm font-normal underline hover:text-[#1ed760] transition-colors"
         href="/signup"
       >
-        Đăng ký Spotify
+        Sign up for HEthereal
       </a>
     </div>
-  </div>
+  </React.Fragment>
 );
 const AccountLink = ({ step, variant }: AccountLinkProps) => {
   return (

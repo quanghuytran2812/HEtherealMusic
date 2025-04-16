@@ -19,8 +19,42 @@ const updateUser = catchAsync(async (req, res) => {
   res.status(StatusCodes.OK).send(user)
 })
 
+const getRecommendArtists = catchAsync(async (req, res) => {
+  const { artistIds } = req.query
+  const artists = await userService.getRecommendArtists(artistIds)
+  res.status(StatusCodes.OK).send(artists)
+})
+
+const getTop = catchAsync(async (req, res) => {
+  const { uid } = req.user
+  const { type } = req.params
+  let { limit = 10, offset = 0 } = req.query
+
+  // Convert query params to numbers
+  limit = parseInt(limit)
+  offset = parseInt(offset)
+  const top = await userService.getTop(uid, type, limit, offset)
+  res.status(StatusCodes.OK).send(top)
+})
+
+const getUserById = catchAsync(async (req, res) => {
+  const { userId } = req.params
+  const user = await userService.getUserById(userId)
+  res.status(StatusCodes.OK).send(user)
+})
+
+const getArtistTopTracks = catchAsync(async (req, res) => {
+  const { artistId } = req.params
+  const tracks = await userService.getArtistTopTracks(artistId)
+  res.status(StatusCodes.OK).send(tracks)
+})
+
 module.exports = {
   createUser,
   getMe,
-  updateUser
+  updateUser,
+  getRecommendArtists,
+  getTop,
+  getUserById,
+  getArtistTopTracks
 }

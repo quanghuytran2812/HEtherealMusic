@@ -54,16 +54,19 @@ const GoogleLoginButton = () => {
   return (
     <a
       onClick={() => handleLoginWithGoogle()}
-      className="cursor-pointer flex rounded-full font-bold text-center align-middle relative border border-[#818181] items-center justify-center pl-14 py-2 pr-8 hover:border-white"
+      className="text-sm cursor-pointer flex rounded-full font-bold text-center align-middle relative border border-[#818181] items-center justify-center pl-14 py-2 pr-8 hover:border-white"
     >
       <span className="flex absolute left-5">
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png"
-          className="size-6"
+          width={24}
+          height={24}
           alt="Google Logo"
+          loading="lazy"
+          decoding="async"
         />
       </span>
-      Đăng ký bằng Google
+      Sign in with Google
     </a>
   );
 };

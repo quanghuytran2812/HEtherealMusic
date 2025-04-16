@@ -5,6 +5,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ChangeEvent } from "react";
 
 interface FormInputFileProps {
   inputRef?: React.RefObject<HTMLInputElement>;
@@ -14,9 +15,14 @@ interface FormInputFileProps {
   accept?: string;
   type?: string;
   classInput?: string;
+  onChange?: (file: File | null) => void;
 }
 
-const FormInputFile = ({ inputRef, form, name, accept, type = "file", classInput }: FormInputFileProps) => {
+const FormInputFile = ({ inputRef, form, name, accept, type = "file", classInput, onChange }: FormInputFileProps) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    onChange?.(file);
+  };
   return (
     <FormField
       control={form.control}
@@ -29,10 +35,10 @@ const FormInputFile = ({ inputRef, form, name, accept, type = "file", classInput
               accept={accept}
               type={type}
               className={classInput}
-              // Omit the value prop for file input
-              onChange={(e) =>
-                field.onChange(e.target.files ? e.target.files[0] : null)
-              }
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                handleChange(e);
+                field.onChange(e.target.files?.[0] || null);
+              }}
             />
           </FormControl>
           <FormMessage />

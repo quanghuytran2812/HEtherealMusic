@@ -97,6 +97,10 @@ const findAlbumById = async (id) => {
       })
       .lean()
 
+    if (!album) {
+      return null
+    }
+
     return {
       _id: album._id,
       title: album.title,
@@ -137,17 +141,16 @@ const findNewReleaseAlbums = async () => {
     const newReleases = await Album.find({
       createdAt: { $gte: thirtyDaysAgo }
     })
-      .populate('artists', 'name')
+      .select('_id title image_url artists songs')
+      .populate({
+        path: 'artists',
+        select: '_id name'
+      })
       .sort({ createdAt: -1 })
       .limit(5)
       .lean()
 
-    return newReleases.map((album) => ({
-      _id: album._id,
-      title: album.title,
-      imageUrl: album.image_url,
-      artists: album.artists.map((artist) => artist.name).join(', ')
-    }))
+    return newReleases
   } catch (error) {
     throw new Error(error)
   }
@@ -167,6 +170,48 @@ const findAllAlbumsByArtist = async (artistId) => {
   } catch (error) {
     throw new Error(error)
   }
+}
+
+const findRecommendAlbums = async (artistIds, genres, trackIds) => {
+  try {
+    // Find albums based on seed artists, genres, and tracks
+    const recommendations = await Album.find({
+      $or: [
+        { artists: { $in: artistIds.map(id => id) } },
+        { genres: { $in: genres.map(id => id) } },
+        { songs: { $in: trackIds.map(id => id) } }
+      ]
+    })
+      .select('_id title image_url artists songs')
+      .populate({
+        path: 'artists',
+        select: '_id name'
+      })
+      .limit(5)
+      .exec()
+
+    return recommendations
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+// Add to your Album model exports
+const searchAlbums = async (query, limit = 5) => {
+  return await Album.aggregate([
+    { $match: { title: { $regex: query, $options: 'i' } } },
+    { $limit: limit },
+    { $project: { _id: 1, title: 1, image_url: 1, artists: 1, songs: 1, createdAt: 1 } },
+    { $lookup: {
+      from: 'users',
+      localField: 'artists',
+      foreignField: '_id',
+      as: 'artists',
+      pipeline: [
+        { $project: { _id: 1, name: 1 } }
+      ]
+    } }
+  ])
 }
 
 const updateAlbum = async (id, data) => {
@@ -196,5 +241,7 @@ module.exports = {
   findAlbumByIdAndUpdate,
   findAlbumById,
   findNewReleaseAlbums,
-  findAllAlbumsByArtist
+  findAllAlbumsByArtist,
+  findRecommendAlbums,
+  searchAlbums
 }

@@ -9,7 +9,10 @@ const enumData = {
   userType: ['user', 'admin', 'artist'],
   gender: ['male', 'female', 'other'],
   songType: ['song', 'podcast'],
-  albumType: ['single', 'album']
+  albumType: ['single', 'album'],
+  libraryType: ['User', 'Album', 'Playlist'],
+  playerType: ['Album', 'Playlist'],
+  playlistType: ['all', 'topLists', 'popularPlaylists', 'likedSongs']
 }
 
 module.exports = { WHITELIST_DOMAINS, enumData }

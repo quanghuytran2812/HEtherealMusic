@@ -10,12 +10,12 @@ interface NotificationAlertProps {
   variant: VariantType;
 }
 
-const NotificationAlert: React.FC<NotificationAlertProps> = ({
+const NotificationAlert = ({
   message,
   title,
   open,
   variant
-}) => {
+}: NotificationAlertProps) => {
   if (!open) return null;
 
   return (

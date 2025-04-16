@@ -21,12 +21,12 @@ interface Item {
 const itemsData: Item[] = [
   {
     id: "1",
-    label: "Tôi không muốn nhận tin nhắn tiếp thị từ Spotify",
+    label: "I do not want to receive marketing messages from HEthereal",
   },
   {
     id: "2",
     label:
-      "Chia sẻ dữ liệu đăng ký của tôi với các nhà cung cấp nội dung của Spotify cho mục đích tiếp thị.",
+      "Share my subscription data with HEthereal content providers for marketing purposes.",
   },
 ];
 
@@ -65,27 +65,26 @@ const TermsAndConditions = ({
         <FormMessage />
         <div>
           <p className="text-sm font-normal text-white">
-            Bằng việc nhấp vào nút Đăng ký, bạn đồng ý với
+            By clicking the Sign Up button, you agree to the
             <a
               className="text-[#1ed760] underline px-1"
               href="https://www.spotify.com/vn-vi/legal/end-user-agreement/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Điều khoản và điều kiện sử dụng của Spotify.
+              HEthereal Terms and Conditions of Use.
             </a>
           </p>
           <p className="text-sm font-normal text-white mt-2">
             <span>
-              Để tìm hiểu thêm về cách thức Spotify thu thập, sử dụng, chia sẻ
-              và bảo vệ dữ liệu cá nhân của bạn, vui lòng xem
+            To learn more about how Ethereal collects, uses, shares and protects your personal data, please see
               <a
                 className="text-[#1ed760] underline pl-1"
                 href="https://www.spotify.com/vn-vi/legal/privacy-policy/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Chính sách quyền riêng tư của Spotify
+                HEthereal Privacy Policy
               </a>
             </span>
           </p>

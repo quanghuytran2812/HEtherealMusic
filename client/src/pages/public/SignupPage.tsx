@@ -1,6 +1,6 @@
 import { FooterAuthentication } from "@/components/footers";
 import { StepFormContainer } from "@/components/forms";
-import { Logo, StepHeader } from "@/components/headers/componentHeader";
+import { Logo, StepHeader } from "@/components/headers";
 import { AccountLink, GoogleSignUpButton } from "@/components/links";
 import { useState } from "react";
 
@@ -18,8 +18,8 @@ const SignupPage = () => {
           <StepHeader
             currentStep={currentStep}
             classHeader="mb-10 text-center"
-            className="text-5xl font-bold text-balance"
-            text="Đăng ký để bắt đầu nghe"
+            className="text-4xl font-bold text-balance"
+            text="Sign up to start listening"
           />
           <StepFormContainer
             currentStep={currentStep}

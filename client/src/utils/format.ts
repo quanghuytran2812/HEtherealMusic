@@ -14,5 +14,11 @@ export const msToTimeCode = (ms: number): string => {
   const minutes = Math.floor(ms / 60);
   const seconds = ms % 60;
 
-  return `${minutes}:${seconds}`;
+  return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
 }
+
+export const formatTime = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+};

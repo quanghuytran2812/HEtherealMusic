@@ -96,16 +96,46 @@ export const endpoints = {
     signUpWithGmail: "/users/sign-up-with-gmail",
     getMe: "/users/me",
     updateUser: "/users/update-user",
+    recommendArtists: "/users/recommend-artists",
+    getTop: "/users/top/",
+    getUserById: "/users/get-user-by-id/",
+    getArtistTopTracks: "/users/get-artist-top-tracks/"
   },
   genre: {
     getAllGenres: "/genre/get-all-genres",
   },
   song: {
     createSong: "/song/create-new-song",
+    likeSong: "/song/like-song",
+    unlikeSong: "/song/unlike-song/"
   },
   album: {
     newRelease: "/album/new-release-albums",
     getAlbumById: "/album/get-album-by-id/",
     getAllAlbumsByArtist: "/album/get-all-albums-by-artist/",
+    recommendAlbums: "/album/recommend-albums",
+  },
+  player: {
+    createNewPlayer: "/player/create-new-player",
+    getRecentlyPlayed: "/player/get-recently-played"
+  },
+  playlist: {
+    getPopularPlaylists: "/playlist/get-popular-playlists",
+    getTopPlaylists: "/playlist/get-top-playlists",
+    getPlaylistById: "/playlist/get-playlist-by-id/",
+  },
+  library: {
+    getLibraryForMe: "/library/get-library-by-user",
+    createNewLibrary: "/library/create-new-library",
+    deleteItemFromLibrary: "/library/delete-item-from-library/"
+  },
+  follow: {
+    followUser: "/follow/follow-user",
+    unfollowUser: "/follow/unfollow-user/",
+    getArtistsFollowedByUser: "/follow/get-artists-followed-by-user",
+    getRelatedArtists: "/follow/get-related-artists/"
+  },
+  search: {
+    search: "/search"
   }
 };

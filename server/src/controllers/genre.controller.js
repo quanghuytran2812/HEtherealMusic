@@ -17,8 +17,14 @@ const getGenreById = catchAsync(async (req, res) => {
   res.status(StatusCodes.OK).send(genre)
 })
 
+const getGenreByName = catchAsync(async (req, res) => {
+  const genre = await genreService.getGenreByName(req.params.genreName)
+  res.status(StatusCodes.OK).send(genre)
+})
+
 module.exports = {
   createNewGenre,
   getAllGenres,
-  getGenreById
+  getGenreById,
+  getGenreByName
 }

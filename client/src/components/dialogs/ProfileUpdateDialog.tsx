@@ -5,19 +5,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { useMeStore } from "@/stores/useMeStore";
 import { Pen, User } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
-import { FormInput } from "../forms";
+import { FormInput } from "@/components/forms";
 import { UpdateUserData } from "@/utils/types";
 import { apiUpdateUser } from "@/apis/user";
 import { toast } from "sonner";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { updateProfileValidator } from "@/utils/validators";
-import FormInputFile from "../forms/FormInputFile";
+import FormInputFile from "@/components/forms/FormInputFile";
 import { z } from "zod";
 
 interface ProfileUpdateDialogProps {
@@ -29,6 +29,7 @@ type ProfileFormValues = z.infer<typeof updateProfileValidator>;
 const ProfileUpdateDialog = ({ triggerContent }: ProfileUpdateDialogProps) => {
   const { me, getMe } = useMeStore();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(updateProfileValidator),
@@ -80,26 +81,48 @@ const ProfileUpdateDialog = ({ triggerContent }: ProfileUpdateDialogProps) => {
     }
   };
 
+  const handleFileChange = (file: File | null) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      form.setValue("imageUrl", file);
+    } else {
+      setPreviewImage(null);
+      form.setValue("imageUrl", new File([], ""));
+    }
+  };
+
+  // Determine which image to display
+  const displayImage =
+    previewImage || (me?.imageUrl && me.imageUrl[me.imageUrl.length - 1]);
+
   return (
     <Dialog>
       <DialogTrigger asChild>{triggerContent}</DialogTrigger>
-      <DialogContent className="sm:max-w-[524px] bg-[#282828]">
+      <DialogContent className="w-[350px] md:w-[524px] bg-[#282828] text-white">
         <DialogHeader>
           <DialogTitle className="text-xl">Profile details</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="grid grid-cols-[180px_auto] grid-rows-[1fr_40px_32px_1fr] gap-4 px-6 pb-6"
+            className="grid grid-cols-1 md:grid-cols-[180px_auto] md:grid-rows-[1fr_40px_32px_1fr] gap-4 px-6 pb-6"
           >
-            <div className="h-[180px] w-[180px] relative group col-start-1 row-start-1 row-end-5">
+            <div className="size-36 md:size-[180px] relative group md:col-start-1 row-start-1 md:row-end-5">
               <div className="flex relative h-full">
-                {me?.imageUrl[me?.imageUrl.length - 1] ? (
-                  <div className="h-full w-full select-none">
+                {displayImage ? (
+                  <div className="w-full select-none">
                     <img
-                      className="w-full h-full object-cover object-center rounded-full"
-                      src={me?.imageUrl[me?.imageUrl.length - 1]}
+                      className="size-full object-cover object-center rounded-full"
+                      src={displayImage}
                       alt={me?.name}
+                      width={180}
+                      height={180}
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 ) : (
@@ -122,13 +145,14 @@ const ProfileUpdateDialog = ({ triggerContent }: ProfileUpdateDialogProps) => {
                         form={form}
                         name="imageUrl"
                         classInput="hidden"
+                        onChange={handleFileChange}
                       />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="relative col-start-2 row-start-2">
+            <div className="relative md:col-start-2 row-start-2">
               <FormInput
                 form={form}
                 name="name"
@@ -136,7 +160,7 @@ const ProfileUpdateDialog = ({ triggerContent }: ProfileUpdateDialogProps) => {
                 classInput="text-base font-normal p-3 bg-[#FFFFFF1A] placeholder:text-[#818181] placeholder:text-base placeholder:font-medium hover:border-white"
               />
             </div>
-            <div className="flex justify-end items-center col-start-2 row-start-3">
+            <div className="flex justify-end items-center md:col-start-2 row-start-3">
               <Button type="submit" className="p-0">
                 <span className="text-base text-black font-bold bg-white px-6 py-2 rounded-full">
                   Save

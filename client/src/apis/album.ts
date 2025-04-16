@@ -12,3 +12,7 @@ export const apiGetAlbumById = (id: string) => {
 export const apiGetAllAlbumsByArtist = (id: string) => {
   return axios.get(endpoints.album.getAllAlbumsByArtist + id);
 };
+
+export const apiRecommendAlbums = () => {
+  return axios.get(endpoints.album.recommendAlbums);
+};

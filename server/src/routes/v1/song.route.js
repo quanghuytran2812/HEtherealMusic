@@ -1,4 +1,5 @@
 const { songController } = require('@/controllers')
+const { authMiddleware } = require('@/middlewares/auth.middleware')
 const { multerUploadMiddleware } = require('@/middlewares/multerUpload.middleware')
 const { songValidation } = require('@/validations')
 
@@ -11,5 +12,7 @@ router.post('/create-new-song',
   ]),
   songValidation.createNewSong,
   songController.createNewSong)
+router.post('/like-song', authMiddleware.isAuthorized, songController.likeSong)
+router.delete('/unlike-song/:songId', authMiddleware.isAuthorized, songController.unlikeSong)
 
 module.exports = router

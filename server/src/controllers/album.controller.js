@@ -22,9 +22,16 @@ const getAllAlbumsByArtist = catchAsync(async (req, res) => {
   res.status(StatusCodes.OK).send(albums)
 })
 
+const getRecommendAlbums = catchAsync(async (req, res) => {
+  const { uid } = req.user
+  const albums = await albumService.getRecommendAlbums(uid)
+  res.status(StatusCodes.OK).send(albums)
+})
+
 module.exports = {
   createNewAlbum,
   getNewReleaseAlbums,
   getAlbumById,
-  getAllAlbumsByArtist
+  getAllAlbumsByArtist,
+  getRecommendAlbums
 }

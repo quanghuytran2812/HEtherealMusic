@@ -64,7 +64,7 @@ const StepFormContainer = ({
       component: (
         <FormInput
           form={forms.email}
-          label="Địa chỉ email"
+          label="Email"
           name="email"
           placeholder="name@domain.com"
           classInput={formInput}
@@ -77,7 +77,7 @@ const StepFormContainer = ({
       component: (
         <FormPasswordInput
           form={forms.password}
-          label="Mật khẩu"
+          label="Password"
           name="password"
           onErrorMessage={false}
         />
@@ -90,13 +90,13 @@ const StepFormContainer = ({
         <>
           <FormInput
             form={forms.userInfo}
-            label="Tên"
-            desc="Tên này sẽ xuất hiện trên hồ sơ của bạn"
+            label="Name"
+            desc="This name will appear on your profile."
             name="name"
             classInput={formInput}
           />
-          <DateOfBirthInput form={forms.userInfo} label="Ngày sinh" />
-          <GenderInput form={forms.userInfo} name="gender" label="Giới tính" />
+          <DateOfBirthInput form={forms.userInfo} label="Date of birth" />
+          <GenderInput form={forms.userInfo} name="gender" label="Gender" />
         </>
       ),
     },

@@ -31,7 +31,7 @@ const StepForm = ({
     const checkEmailExist = await apiCheckNewUserFromEmail(email);
     if (checkEmailExist.data.hasUser) {
       toast.warning(
-        "Địa chỉ này đã được liên kết với một tài khoản hiện có. Vui lòng dùng địa chỉ khác."
+        "This address is already associated with an existing account. Please use a different address."
       );
       return false;
     }
@@ -130,12 +130,12 @@ const StepForm = ({
             </div>
             <div className="py-4 mr-14 flex flex-col items-start">
               <span className="mb-1 text-[#b3b3b3] text-base font-normal">
-                {step != 0 && `Bước ${step}/${totalSteps}`}
+                {step != 0 && `Step ${step}/${totalSteps}`}
               </span>
               <span className="text-base font-bold">
-                {step === 1 && "Tạo mật khẩu"}
-                {step === 2 && "Giới thiệu thông tin về bản thân bạn"}
-                {step === 3 && "Điều khoản & Điều kiện"}
+                {step === 1 && "Create a password"}
+                {step === 2 && "Introduce yourself"}
+                {step === 3 && "Terms & Conditions"}
               </span>
             </div>
           </div>
@@ -149,7 +149,7 @@ const StepForm = ({
             className="mt-5 p-0 w-full h-12 font-bold text-base"
           >
             <span className="w-full h-full items-center justify-center flex bg-[#1ed760] py-2 px-8 text-[#000000] rounded-full hover:bg-[#1ed760]/80 transition-colors">
-              {step === totalSteps ? "Đăng ký" : "Tiếp theo"}
+              {step === totalSteps ? "Sign Up" : "Continue"}
             </span>
           </Button>
         </form>

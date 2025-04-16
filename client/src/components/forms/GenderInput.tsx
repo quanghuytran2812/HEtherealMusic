@@ -24,8 +24,7 @@ const GenderInput = ({ form, name, label }: GenderInputProps) => (
         <FormLabel className="font-bold text-sm flex flex-col">
           {label}
           <span className="text-[#818181] text-sm font-normal">
-            Giới tính của bạn giúp chúng tôi cung cấp nội dung đề xuất và quảng
-            cáo phù hợp với bạn.
+            Your gender helps us deliver relevant recommendations and ads to you.
           </span>
         </FormLabel>
         <FormControl>

@@ -1,6 +1,7 @@
+const { enumData } = require('@/utils/constants.utils')
+const { messagePlaylist } = require('@/validations/custom.validation')
 const Joi = require('joi')
 const mongoose = require('mongoose')
-const { customValidation } = require('@/validations')
 
 const playlistSchema = mongoose.Schema(
   {
@@ -11,15 +12,56 @@ const playlistSchema = mongoose.Schema(
     genres: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Genre' }],
     users: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     songs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Song' }],
+    type: {
+      type: String,
+      enum: enumData.playlistType,
+      default: enumData.playlistType[0]
+    },
     isPublic: { type: Boolean, default: true } // 1 for private, 2 for public
   },
   { timestamps: true, versionKey: false } // createdAt, updatedAt
 )
 
 const schema = Joi.object({
-  email: Joi.string().required().trim().email().messages({
-    'string.empty': customValidation.messages.email.required,
-    'string.email': customValidation.messages.email.invalid
+  title: Joi.string().trim().min(3).required().messages({
+    'string.empty': messagePlaylist.title.required,
+    'string.min': messagePlaylist.title.min
+  }),
+  description: Joi.string().trim().min(3).optional().messages({
+    'string.empty': messagePlaylist.description.required,
+    'string.min': messagePlaylist.description.min
+  }),
+  image_url: Joi.string().trim().required().messages({
+    'string.empty': messagePlaylist.image_url.required
+  }),
+  saves: Joi.number().integer().min(0).optional().messages({
+    'number.base': messagePlaylist.saves.base,
+    'number.integer': messagePlaylist.saves.integer,
+    'number.min': messagePlaylist.saves.min
+  }),
+  genres: Joi.array().items(Joi.string()).optional(),
+  users: Joi.string().required().messages({
+    'string.empty': messagePlaylist.users.required
+  }),
+  songs: Joi.array()
+    .items(Joi.string().required())
+    .min(1)
+    .required()
+    .optional()
+    .messages({
+      'array.min': messagePlaylist.songs.required,
+      'any.required': messagePlaylist.songs.required
+    }),
+  type: Joi.string()
+    .trim()
+    .required()
+    .valid(...Object.values(enumData.playlistType))
+    .messages({
+      'string.empty': messagePlaylist.type.required,
+      'any.only': messagePlaylist.type.valid
+    }),
+  isPublic: Joi.boolean().default(true).optional().messages({
+    'boolean.base': messagePlaylist.isPublic.base
   })
 })
 // Indicates which Fields we do not allow to be updated in the Playlist()
@@ -44,6 +86,117 @@ const createNewPlaylist = async (data) => {
 const findPlaylistById = async (id) => {
   try {
     const playlist = await Playlist.findById(id)
+      .select('-updatedAt -createdAt') // Exclude updatedAt, createdAt, type
+      .populate({
+        path: 'users',
+        select: '_id name'
+      })
+      .populate({
+        path: 'songs',
+        select: '-updatedAt -createdAt', // Exclude albums and updatedAt, createdAt
+        populate: [{
+          path: 'artists', // Populate artists for each song
+          select: '_id name' // Only select artist names
+        },
+        {
+          path: 'albums', // Populate albums for each song
+          select: '_id title' // Only select album title
+        }]
+      })
+      .lean()
+
+    if (!playlist) {
+      return null
+    }
+    return playlist
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const findPlaylistByName = async (name) => {
+  try {
+    const playlist = await Playlist.findOne({ title: name })
+    return playlist
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const findPlaylistsExist = async (playlistData) => {
+  try {
+    const playlists = await Playlist.findOne(playlistData)
+    return playlists
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const findPopularPlaylists = async () => {
+  try {
+    const popularPlaylists = await Playlist.find({
+      type: 'popularPlaylists',
+      isPublic: true
+    })
+      .select('_id title image_url description type songs')
+      .sort({ saves: -1 })
+      .limit(10)
+    return popularPlaylists
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const findTopPlaylists = async () => {
+  try {
+    const topPlaylists = await Playlist.find({
+      type: 'topLists',
+      isPublic: true
+    })
+      .select('_id title image_url description type songs')
+      .sort({ saves: -1 })
+      .limit(10)
+    return topPlaylists
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+// Add to your Playlist model exports
+const searchPlaylists = async (query, limit = 5) => {
+  return await Playlist.aggregate([
+    {
+      $match: {
+        title: { $regex: query, $options: 'i' },
+        isPublic: true
+      }
+    },
+    { $limit: limit },
+    { $project: {
+      _id: 1,
+      title: 1,
+      image_url: 1,
+      users: 1,
+      songs: 1
+    } },
+    { $lookup: {
+      from: 'users',
+      localField: 'users',
+      foreignField: '_id',
+      as: 'users',
+      pipeline: [
+        { $project: { _id: 1, name: 1 } }
+      ]
+    } },
+    { $addFields: {
+      users: { $arrayElemAt: ['$users', 0] } // Convert users array to single object
+    } }
+  ])
+}
+
+const removePlaylist = async (id) => {
+  try {
+    const playlist = await Playlist.findByIdAndDelete(id)
     return playlist
   } catch (error) {
     throw new Error(error)
@@ -61,10 +214,9 @@ const updatePlaylist = async (id, data) => {
 
     const result = await Playlist.findByIdAndUpdate(
       { _id: id },
-      { $set: data },
+      data,
       { returnDocument: 'after' } // Return result after update
     )
-
     return result
   } catch (error) {
     throw new Error(error)
@@ -74,5 +226,11 @@ const updatePlaylist = async (id, data) => {
 module.exports = {
   createNewPlaylist,
   updatePlaylist,
-  findPlaylistById
+  findPlaylistById,
+  findPlaylistByName,
+  findPopularPlaylists,
+  findTopPlaylists,
+  searchPlaylists,
+  findPlaylistsExist,
+  removePlaylist
 }

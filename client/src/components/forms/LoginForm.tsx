@@ -105,21 +105,21 @@ const LoginForm = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <FormInput
             form={form}
-            label="Địa chỉ email"
+            label="Email"
             name="email"
             placeholder="name@domain.com"
             classInput={formInput}
           />
           <FormPasswordInput
             form={form}
-            label="Mật khẩu"
+            label="Password"
             name="password"
-            placeholder="Mật khẩu"
+            placeholder="Password"
             onErrorMessage={true}
           />
           <Button type="submit" className="p-0 w-full h-12 font-bold text-base">
             <span className="w-full h-full items-center justify-center flex bg-[#1ed760] py-2 px-8 text-[#000000] rounded-full hover:bg-[#1ed760]/80 transition-colors">
-              Đăng nhập
+              Sign In
             </span>
           </Button>
         </form>

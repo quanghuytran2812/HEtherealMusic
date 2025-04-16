@@ -65,11 +65,6 @@ const messageGenre = {
   },
   image_url: {
     required: 'Image URL is required.'
-  },
-  color: {
-    required: 'Color is required.',
-    min: 'Color must be at least 3 characters long.',
-    max: 'Color must not exceed 30 characters.'
   }
 }
 
@@ -93,6 +88,41 @@ const messageAlbum = {
   },
   songs: {
     required: 'At least one song is required.'
+  }
+}
+
+const messagePlaylist = {
+  title: {
+    required: 'Title is required.',
+    min: 'Title must be at least 3 characters long.'
+  },
+  description: {
+    required: 'Description is required.',
+    min: 'Description must be at least 3 characters long.'
+  },
+  image_url: {
+    required: 'Image URL is required.'
+  },
+  saves: {
+    base: 'Saves must be a number.',
+    integer: 'Saves must be an integer.',
+    min: 'Saves cannot be negative.'
+  },
+  genres: {
+    required: 'At least one genre is required.'
+  },
+  users: {
+    required: 'Users is required.'
+  },
+  songs: {
+    required: 'At least one song is required.'
+  },
+  type: {
+    required: 'Type Playlist is required.',
+    valid: 'Type Playlist must be one of the following: ' + enumData.playlistType.join(', ')
+  },
+  isPublic: {
+    base: 'isPublic must be a boolean'
   }
 }
 
@@ -125,6 +155,57 @@ const messageSong = {
   }
 }
 
+const messagePlayer = {
+  items: {
+    base: 'Items must be an array.',
+    required: 'Items is required.'
+  },
+  track: {
+    required: 'Track is required.',
+    pattern: 'Track must be a valid ObjectId'
+  },
+  type: {
+    required: 'Player Type is required.',
+    invalid:
+      'Player Type must be one of the following: ' + enumData.playerType.join(', ')
+  },
+  user: {
+    required: 'User is required.',
+    pattern: 'User must be a valid ObjectId'
+  }
+}
+
+const messageLibrary = {
+  items: {
+    base: 'Items must be an array.',
+    required: 'Items is required.'
+  },
+  track: {
+    required: 'Track is required.',
+    pattern: 'Track must be a valid ObjectId'
+  },
+  type: {
+    required: 'Library Type is required.',
+    invalid:
+      'Library Type must be one of the following: ' + enumData.libraryType.join(', ')
+  },
+  user: {
+    required: 'User is required.',
+    pattern: 'User must be a valid ObjectId'
+  }
+}
+
+const messageFollow = {
+  following_user_id: {
+    required: 'Following UserId is required.',
+    pattern: 'Following UserId must be a valid ObjectId'
+  },
+  followed_user_id: {
+    required: 'Followed UserId is required.',
+    pattern: 'Followed UserId must be a valid ObjectId'
+  }
+}
+
 // Custom validation for date of birth
 const validateDob = (value, helpers) => {
   // Check if the date is in the correct format (YYYY-MM-DD)
@@ -153,5 +234,9 @@ module.exports = {
   ACCEPTED_AUDIO_TYPES,
   messageAlbum,
   messageGenre,
-  messageSong
+  messageSong,
+  messagePlayer,
+  messagePlaylist,
+  messageLibrary,
+  messageFollow
 }

@@ -39,9 +39,9 @@ const createNewGenre = async (data) => {
   }
 }
 
-const findGenreByGenreName = async (data) => {
+const findGenreByGenreName = async (genreName) => {
   try {
-    const genre = await Genre.find({ genre_name: data })
+    const genre = await Genre.find({ genre_name: { $regex: genreName, $options: 'i' } })
     return genre
   } catch (error) {
     throw new Error(error)
@@ -98,6 +98,31 @@ const getAllGenres = async () => {
   }
 }
 
+const getRandomGenres = async () => {
+  try {
+    const randomGenres = await Genre.aggregate([
+      { $sample: { size: 2 } },
+      { $project: { _id: 1 } }
+    ])
+    return randomGenres
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+// Add to your Genre model exports
+const searchGenres = async (query, limit = 5) => {
+  return await Genre.aggregate([
+    { $match: { genre_name: { $regex: query, $options: 'i' } } },
+    { $limit: limit },
+    { $project: {
+      _id: 1,
+      genre_name: '$genre_name',
+      image_url: 1
+    } }
+  ])
+}
+
 const updateGenre = async (id, data) => {
   try {
     // Remove fields that are not permitted to be modified.
@@ -125,5 +150,7 @@ module.exports = {
   updateGenre,
   getAllGenres,
   findGenreById,
-  checkGenresExist
+  checkGenresExist,
+  getRandomGenres,
+  searchGenres
 }

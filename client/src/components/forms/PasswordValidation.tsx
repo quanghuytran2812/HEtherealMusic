@@ -12,15 +12,15 @@ const PasswordValidation = ({ password, isErrors }: PasswordValidationProps) => 
   const messagesValidation = [
     {
       condition: hasLetter,
-      message: "1 chữ cái",
+      message: "1 letter",
     },
     {
       condition: hasDigitOrSpecial,
-      message: "1 chữ số hoặc ký tự đặc biệt (ví dụ: # ? ! &)",
+      message: "1 digit or special character (e.g. # ? ! &)",
     },
     {
       condition: isLongEnough,
-      message: "10 ký tự",
+      message: "10 characters",
     },
   ];
 
@@ -32,7 +32,7 @@ const PasswordValidation = ({ password, isErrors }: PasswordValidationProps) => 
   return (
     <div>
       <span className="font-bold text-sm text-white">
-        Mật khẩu của bạn phải có ít nhất
+        Your password must be at least
       </span>
       <ul>
         {messagesValidation.map((value, index) => (

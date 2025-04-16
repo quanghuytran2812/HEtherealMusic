@@ -1,4 +1,4 @@
-const { User } = require('@/models')
+const { User, Player, Song } = require('@/models')
 const { StatusCodes } = require('http-status-codes')
 const bcrypt = require('bcryptjs')
 const { BrevoEmail } = require('@/utils/brevoEmail.utils')
@@ -143,8 +143,63 @@ const updateUser = async (id, reqBody, fileImage) => {
   return { success: !!updateUser }
 }
 
+const getRecommendArtists = async (artistIds) => {
+  if (artistIds) {
+    const uniqueArtistIds = [...new Set(artistIds.split(','))]
+    const artists = await User.findRecommendArtists(uniqueArtistIds)
+    return artists
+  }
+}
+
+const getTop = async (userId, type, limit, offset) => {
+  try {
+    // Validate parameters
+    if (!['artists', 'tracks'].includes(type)) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid type parameter. Valid values are "artists" or "tracks"')
+    }
+    // Find the user to ensure they exist
+    const user = await User.findUserById(userId)
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
+    }
+
+    // Get top items from database
+    let result
+    if (type === 'artists') {
+      result = await Player.getTopArtists(userId, limit, offset)
+    } else {
+      result = await Player.getTopTracks(userId, limit, offset)
+    }
+    return result
+  } catch (error) {
+    throw new error
+  }
+}
+
+const getUserById = async (id) => {
+  try {
+    const user = await User.findUserById(id)
+    return user
+  } catch (error) {
+    throw new error
+  }
+}
+
+const getArtistTopTracks = async (artistId) => {
+  try {
+    const tracks = await Song.getArtistTopTracks(artistId)
+    return tracks
+  } catch (error) {
+    throw new error
+  }
+}
+
 module.exports = {
   createUser,
   getMe,
-  updateUser
+  updateUser,
+  getRecommendArtists,
+  getTop,
+  getUserById,
+  getArtistTopTracks
 }

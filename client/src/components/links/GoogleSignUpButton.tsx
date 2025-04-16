@@ -21,7 +21,7 @@ const GoogleSignUpButton = ({
     const checkEmailExist = await apiCheckNewUserFromEmail(email);
     if (checkEmailExist.data.hasUser) {
       toast.warning(
-        "Địa chỉ này đã được liên kết với một tài khoản hiện có. Vui lòng dùng địa chỉ khác."
+        "This address is already associated with an existing account. Please use a different address."
       );
       return false;
     }
@@ -35,7 +35,7 @@ const GoogleSignUpButton = ({
         // check email exists
         const isEmailValid = await handleEmailCheck(response.data.email);
         if (!isEmailValid) return;
-        
+
         setRegisterData({
           email: response.data.email,
           name: response.data.name,
@@ -62,22 +62,25 @@ const GoogleSignUpButton = ({
         <div className="mt-8">
           <div className="w-full relative flex justify-center before:content-[''] before:w-full before:h-[1px] before:bg-[#818181] before:block before:absolute before:top-1/2 before:left-0">
             <span className="px-3 relative inline-block text-sm font-normal bg-black">
-              hoặc
+              or
             </span>
           </div>
           <div className="mt-8">
             <a
               onClick={() => handleSignUpWithGoogle()}
-              className="cursor-pointer flex rounded-full font-bold text-center align-middle relative border border-[#818181] items-center justify-center pl-14 py-2 pr-8 hover:border-white"
+              className="text-sm cursor-pointer flex rounded-full font-bold text-center align-middle relative border border-[#818181] items-center justify-center pl-14 py-2 pr-8 hover:border-white"
             >
               <span className="flex absolute left-5">
                 <img
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png"
-                  className="size-6"
                   alt="Google Logo"
+                  width={24}
+                  height={24}
+                  loading="lazy"
+                  decoding="async"
                 />
               </span>
-              Đăng ký bằng Google
+              Sign up with Google
             </a>
           </div>
         </div>

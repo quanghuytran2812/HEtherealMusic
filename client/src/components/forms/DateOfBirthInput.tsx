@@ -25,14 +25,14 @@ const DateOfBirthInput = ({ form, label }: DateOfBirthInputProps) => {
       <FormLabel className="font-bold text-sm flex flex-col">
         {label}
         <span className="text-[#818181] text-sm font-normal">
-          Tại sao chúng tôi cần biết ngày sinh của bạn?
+          Why do we need to know your date of birth?
           <a
             className="underline"
             target="_blank"
             rel="noopener noreferrer"
             href="https://www.spotify.com/legal/end-user-agreement/"
           >
-            Tìm hiểu thêm.
+            Learn more.
           </a>
         </span>
       </FormLabel>
@@ -62,7 +62,7 @@ const DateOfBirthInput = ({ form, label }: DateOfBirthInputProps) => {
                 defaultValue={field.value?.toString() || ""}
               >
                 <SelectTrigger className="w-[180px] h-12 text-base font-normal p-3 bg-transparent border border-gray-400 text-white hover:border-white">
-                  <SelectValue placeholder="Tháng" />
+                  <SelectValue placeholder="Month" />
                 </SelectTrigger>
                 <SelectContent className="bg-black border border-gray-400 text-white">
                   {[...Array(12)].map((_, index) => (

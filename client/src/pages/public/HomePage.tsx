@@ -1,37 +1,101 @@
-import { Card } from "@/components/cards";
-import { FooterMainContent } from "@/components/footers";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useAlbumStore } from "@/stores/useAlbumStore";
-import { dataAlums, dataArtist, dataPlaylist } from "@/utils/contants";
-import { useEffect } from "react";
+import { MusicSection } from "@/components/section";
+import { useMusicStore } from "@/stores/useMusicStore";
+import { useEffect, useMemo } from "react";
 
 const HomePage = () => {
-  const { albums, getAlbums } = useAlbumStore();
+  const {
+    // State
+    recommendAlbums,
+    artistsRecommend,
+    albumsReleases,
+    playlistsPopular,
+    playlistsTop,
+    // Status
+    albumStatus,
+    artistStatus,
+    playlistStatus,
+    // Actions
+    getRecommendAlbums,
+    getPopularPlaylists,
+    getTopPlaylists,
+    getNewAlbumReleases,
+    getRecommendArtists,
+  } = useMusicStore();
+  // Memoize unique artist IDs to avoid recalculating on every render
+  const uniqueArtistIds = useMemo(() => {
+    if (!recommendAlbums.length) return "";
+    const artistIdsEntries = recommendAlbums.flatMap(
+      (album) => album.artists?.map((artist) => artist._id) || []
+    );
+    return [...new Set(artistIdsEntries)].join(",");
+  }, [recommendAlbums]);
+
+  // Initial data fetch
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      await Promise.all([
+        getRecommendAlbums(),
+        getPopularPlaylists(),
+        getTopPlaylists(),
+        getNewAlbumReleases(),
+      ]);
+    };
+
+    fetchInitialData();
+  }, [
+    getRecommendAlbums,
+    getPopularPlaylists,
+    getTopPlaylists,
+    getNewAlbumReleases,
+  ]);
 
   useEffect(() => {
-    getAlbums();
-  }, [getAlbums]);
+    if (uniqueArtistIds) {
+      getRecommendArtists(uniqueArtistIds);
+    }
+  }, [uniqueArtistIds, getRecommendArtists]);
+
   return (
-    <div className="w-[calc(100% + 0px)] overflow-hidden">
-      <ScrollArea className="h-[calc(100vh-105px)] rounded-lg bg-[#121212]">
-        <main className="w-full">
-          <section className="contain-inline-size pt-3 isolate">
-            <div className="px-4 flex flex-wrap flex-row gap-y-6 gap-x-8">
-              {/* Popular artists */}
-              <Card title="Popular Artists" items={dataArtist} />
-              {/* Popular albums and singles */}
-              <Card title="Popular albums and singles" items={dataAlums} />
-              {/* Popular radio */}
-              <Card title="New Releases" items={albums} link="album"/>
-              {/* Featured Charts */}
-              <Card title="Featured Charts" items={dataPlaylist} />
-              {/* Playlists from our editors */}
-              <Card title="Playlists from our editors" items={dataPlaylist} />
-            </div>
-          </section>
-        </main>
-        <FooterMainContent />
-      </ScrollArea>
+    <div className="mt-16 md:mt-4 px-4">
+      {/* Recommended Albums */}
+      <MusicSection
+        title="Recommended for you"
+        items={recommendAlbums}
+        isLoading={albumStatus === 'loading'}
+        type="album"
+      />
+
+      {/* Recommended Artists */}
+      <MusicSection
+        title="Artists for you"
+        items={artistsRecommend}
+        isLoading={artistStatus === 'loading'}
+        type="artist"
+      />
+
+      {/* New Releases */}
+      <MusicSection
+        title="New Releases"
+        items={albumsReleases}
+        isLoading={albumStatus === 'loading'}
+        type="album"
+      />
+
+      {/* Popular Playlists */}
+      <MusicSection
+        title="Popular Playlists"
+        items={playlistsPopular}
+        isLoading={playlistStatus === 'loading'}
+        type="playlist"
+      />
+
+      {/* Top Playlists */}
+      <MusicSection
+        title="Top Playlists"
+        items={playlistsTop}
+        isLoading={playlistStatus === 'loading'}
+        type="playlist"
+      />
     </div>
   );
 };

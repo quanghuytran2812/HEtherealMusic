@@ -1,1 +1,1 @@
-export { default as DropdownMenuCustom } from "./DropdownMenuCustom";
+export { default as MenuDropdown } from "./MenuDropdown";

@@ -88,6 +88,114 @@ const findSongById = async (id) => {
   }
 }
 
+const checkSongsExist = async (songIds) => {
+  try {
+    const songs = await Song.find({ _id: { $in: songIds } })
+    return songs
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const getRandomSongs = async () => {
+  try {
+    const randomSongs = await Song.aggregate([
+      { $sample: { size: 2 } },
+      { $project: { _id: 1 } }
+    ])
+    return randomSongs
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+// Add to your Song model exports
+const searchSongs = async (query, limit = 4) => {
+  return await Song.aggregate([
+    { $match: { title: { $regex: query, $options: 'i' } } },
+    { $limit: limit },
+    { $project: { _id: 1, title: 1, image_url: 1, artists: 1, duration: 1, albums: 1 } },
+    { $lookup: {
+      from: 'users',
+      localField: 'artists',
+      foreignField: '_id',
+      as: 'artists',
+      pipeline: [
+        { $project: { _id: 1, name: 1 } }
+      ]
+    } },
+    {
+      $lookup: {
+        from: 'albums',
+        localField: 'albums',
+        foreignField: '_id',
+        as: 'albums',
+        pipeline: [
+          { $project: { _id: 1, title: 1 } }
+        ]
+      }
+    },
+    { $addFields: {
+      albums: { $arrayElemAt: ['$albums', 0] } // Convert albums array to single object
+    } }
+  ])
+}
+
+const getArtistTopTracks = async (artistId, limit = 10) => {
+  try {
+    const tracks = await Song.aggregate([
+      { $match: { artists: new mongoose.Types.ObjectId(artistId) } },
+      { $sort: { popularity: -1, views: -1 } },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'artists',
+          foreignField: '_id',
+          as: 'artists',
+          pipeline: [
+            { $project: { _id: 1, name: 1 } }
+          ]
+        }
+      },
+      // Lookup to populate album details
+      {
+        $lookup: {
+          from: 'albums',
+          localField: 'albums',
+          foreignField: '_id',
+          as: 'album',
+          pipeline: [
+            { $project: { _id: 1, title: 1 } }
+          ]
+        }
+      },
+      // Convert arrays to single objects where needed
+      { $addFields: {
+        albums: { $arrayElemAt: ['$album', 0] }
+      } },
+      // Project final format
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          image_url: 1,
+          audio_url: 1,
+          duration: 1,
+          popularity: 1,
+          views: 1,
+          artists: 1,
+          albums: 1,
+          isExplicit: 1
+        }
+      }
+    ])
+    return tracks
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 const updateSong = async (id, data) => {
   try {
     // Remove fields that are not permitted to be modified.
@@ -99,7 +207,7 @@ const updateSong = async (id, data) => {
 
     const result = await Song.findByIdAndUpdate(
       { _id: id },
-      { $set: data },
+      data,
       { returnDocument: 'after' } // Return result after update
     )
 
@@ -112,5 +220,9 @@ const updateSong = async (id, data) => {
 module.exports = {
   createNewSong,
   updateSong,
-  findSongById
+  findSongById,
+  getRandomSongs,
+  checkSongsExist,
+  searchSongs,
+  getArtistTopTracks
 }
