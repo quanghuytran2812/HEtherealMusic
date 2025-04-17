@@ -10,7 +10,7 @@ import {
 } from "@/lib/classname";
 import { cn } from "@/lib/utils";
 import { msToTimeCode } from "@/utils/format";
-import { Artist } from "@/utils/types";
+import { Artist, Song } from "@/utils/types";
 import { PlayButton } from "@/components/play_button";
 import IconButton from "@/components/top_bar/icon_btn/IconButton";
 import { Check, CirclePlus, Ellipsis } from "lucide-react";
@@ -21,6 +21,7 @@ import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useMemo } from "react";
 import { useSongStore } from "@/stores/useSongStore";
 import { useLibraryStore } from "@/stores/useLibraryStore";
+import { Link } from "react-router-dom";
 
 interface itemProps {
   trackNumber?: number;
@@ -34,8 +35,9 @@ interface itemProps {
 }
 interface ListItemProps {
   track: itemProps;
+  arrayTracks?: Song[];
 }
-const ListItem = ({ track }: ListItemProps) => {
+const ListItem = ({ track, arrayTracks = [] }: ListItemProps) => {
   const { isPlaying, currentSong } = usePlayerStore();
   const { libraryMe, fetchLibraryMe } = useLibraryStore();
   const {
@@ -66,7 +68,7 @@ const ListItem = ({ track }: ListItemProps) => {
     } else {
       addLikedSong(track._id);
     }
-    await fetchLibraryMe()
+    await fetchLibraryMe();
   };
   return (
     <div className={cn(list_item, "group")} key={track.trackNumber}>
@@ -76,13 +78,23 @@ const ListItem = ({ track }: ListItemProps) => {
           <span className={cn(body_small, "group-hover:hidden size-4")}>
             {track.trackNumber}
           </span>
-          <PlayButton
-            songId={track._id}
-            itemId={track.itemId}
-            classButton="text-white hidden group-hover:block"
-            sizeIcon={16}
-            fillColor="#fff"
-          />
+          {arrayTracks?.length > 0 ? (
+            <PlayButton
+              songId={track._id}
+              arrSongs={arrayTracks}
+              classButton="text-white hidden group-hover:block"
+              sizeIcon={16}
+              fillColor="#fff"
+            />
+          ) : (
+            <PlayButton
+              songId={track._id}
+              itemId={track.itemId}
+              classButton="text-white hidden group-hover:block"
+              sizeIcon={16}
+              fillColor="#fff"
+            />
+          )}
         </div>
       )}
 
@@ -115,16 +127,17 @@ const ListItem = ({ track }: ListItemProps) => {
         )}
       >
         <div>
-          <h3
+          <Link
+            to={`/track/${track._id}`}
             className={cn(
               body_medium,
               ellipsis_one_line,
-              "text-white font-bold",
+              "text-white font-bold hover:underline",
               isCurrentSong && isPlaying && "text-[#12E29A]"
             )}
           >
             {track.title}
-          </h3>
+          </Link>
 
           <p className={cn(body_small, "opacity-80", ellipsis_one_line)}>
             {track.artists?.map((artist) => artist.name).join(", ")}
@@ -144,7 +157,11 @@ const ListItem = ({ track }: ListItemProps) => {
           <IconButton
             icon={
               isSongInLibrary ? (
-                <Check size={12} className="text-black visible" strokeWidth={4}/>
+                <Check
+                  size={12}
+                  className="text-black visible"
+                  strokeWidth={4}
+                />
               ) : (
                 <CirclePlus
                   size={16}
@@ -154,9 +171,7 @@ const ListItem = ({ track }: ListItemProps) => {
             }
             variant="hidden md:block"
             classSpan={`size-4 hover:scale-105 ${
-              isSongInLibrary
-                ? "bg-[#12E29A] rounded-full"
-                : "hover:text-white"
+              isSongInLibrary ? "bg-[#12E29A] rounded-full" : "hover:text-white"
             }`}
             onClick={handleToggleLikeSong}
             disabled={isSongLoading}

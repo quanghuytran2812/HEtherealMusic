@@ -9,5 +9,6 @@ router.post('/create-new-playlist', authMiddleware.isAuthorized, playlistValidat
 router.get('/get-popular-playlists', playlistController.getPopularPlaylists)
 router.get('/get-top-playlists', playlistController.getTopPlaylists)
 router.get('/get-playlist-by-id/:playlistId', playlistController.getPlaylistById)
+router.get('/get-playlists-by-genre/:genreId', playlistController.getPlaylistsByGenre)
 
 module.exports = router

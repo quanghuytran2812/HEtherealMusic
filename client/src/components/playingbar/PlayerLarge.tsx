@@ -17,6 +17,7 @@ import IconButton from "@/components/top_bar/icon_btn/IconButton";
 import { PlayButton } from "@/components/play_button";
 import {
   Repeat,
+  Repeat1,
   Shuffle,
   SkipBack,
   SkipForward,
@@ -34,7 +35,15 @@ interface PlayerLargeProps {
   setOpen: (open: boolean) => void;
 }
 const PlayerLarge = ({ open, setOpen }: PlayerLargeProps) => {
-  const { currentSong, playNext, playPrevious } = usePlayerStore();
+  const {
+    currentSong,
+    playNext,
+    playPrevious,
+    isRepeat,
+    isShuffle,
+    toggleRepeat,
+    toggleShuffle,
+  } = usePlayerStore();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -204,13 +213,23 @@ const PlayerLarge = ({ open, setOpen }: PlayerLargeProps) => {
 
           <div className="player-control-btns flex items-center gap-3 justify-center">
             <IconButton
-              icon={<Shuffle size={16} />}
-              variant="size-8"
-              disabled
+              icon={
+                isShuffle ? (
+                  <Shuffle
+                    size={16}
+                    className="text-[#12E29A]"
+                  />
+                ) : (
+                  <Shuffle size={16} />
+                )
+              }
+              variant="size-8 hover:text-white hover:scale-110"
+              onClick={toggleShuffle}
+              disabled={!currentSong}
             />
             <IconButton
               icon={<SkipBack size={16} />}
-              variant="size-8"
+              variant="size-8 hover:text-white hover:scale-110"
               onClick={playPrevious}
               disabled={!currentSong}
             />
@@ -225,11 +244,22 @@ const PlayerLarge = ({ open, setOpen }: PlayerLargeProps) => {
             )}
             <IconButton
               icon={<SkipForward size={16} />}
-              variant="size-8"
+              variant="size-8 hover:text-white hover:scale-110"
               onClick={playNext}
               disabled={!currentSong}
             />
-            <IconButton icon={<Repeat size={16} />} variant="size-8" disabled />
+            <IconButton
+              icon={
+                isRepeat ? (
+                  <Repeat1 size={16} className="text-[#12E29A]" />
+                ) : (
+                  <Repeat size={16} />
+                )
+              }
+              variant="size-8 hover:text-white hover:scale-110"
+              onClick={toggleRepeat}
+              disabled={!currentSong}
+            />
           </div>
         </div>
 

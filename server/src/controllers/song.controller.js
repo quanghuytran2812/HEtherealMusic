@@ -21,8 +21,22 @@ const unlikeSong = catchAsync(async (req, res) => {
   res.status(StatusCodes.OK).send(song)
 })
 
+const getSongById = catchAsync(async (req, res) => {
+  const { songId } = req.params
+  const song = await songService.getSongById(songId)
+  res.status(StatusCodes.OK).send(song)
+})
+
+const getRecommendedSongsByIds = catchAsync(async (req, res) => {
+  const { songId } = req.params
+  const recommendedSongs = await songService.getRecommendedSongsById(songId)
+  res.status(StatusCodes.OK).send(recommendedSongs)
+})
+
 module.exports = {
   createNewSong,
   likeSong,
-  unlikeSong
+  unlikeSong,
+  getSongById,
+  getRecommendedSongsByIds
 }

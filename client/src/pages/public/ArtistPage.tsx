@@ -145,6 +145,7 @@ const ArtistPage = () => {
           <div className={cn(detail_actions)}>
             <PlayButton
               songId={songId}
+              arrSongs={displayedTracks}
               classButton="text-[#003823] bg-[#12E29A] hover:scale-105 relative"
               fillColor="#000"
             />
@@ -176,6 +177,7 @@ const ArtistPage = () => {
                   duration: song.duration,
                   trackNumber: i + 1,
                 }}
+                arrayTracks={artistTopTracks}
               />
             ))}
           </div>

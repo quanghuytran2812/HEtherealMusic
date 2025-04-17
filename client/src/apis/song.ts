@@ -13,3 +13,11 @@ export const apiLikeSong = (id: string) => {
 export const apiUnlikeSong = (id: string) => {
   return axios.delete(endpoints.song.unlikeSong + id);
 };
+
+export const apiGetSongById = (id: string) => {
+  return axios.get(endpoints.song.getSongById + id);
+};
+
+export const apiGetRecommendedSongsByIds = (ids: string) => {
+  return axios.get(endpoints.song.getRecommendedSongsByIds + ids);
+}

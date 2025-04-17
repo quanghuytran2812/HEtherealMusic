@@ -1,16 +1,19 @@
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const AudioPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const prevSongRef = useRef<string | null>(null);
   const [isAudioReady, setIsAudioReady] = useState(false);
   const documentTitle = useMemo(() => document.title, []);
-  const { currentSong, isPlaying, playNext, fetchRecentlyPlayed } = usePlayerStore();
+  const { currentSong, isPlaying, playNext, fetchRecentlyPlayed, queue, isRepeat } = usePlayerStore();
 
   useEffect(() => {
-    fetchRecentlyPlayed();
-  }, [fetchRecentlyPlayed]);
+    // Only fetch recently played if the queue is empty
+    if (queue.length === 0) {
+      fetchRecentlyPlayed();
+    }
+  }, [queue.length, fetchRecentlyPlayed]);
 
   // Memoize artist names
   const artistNameStr = useMemo(() => {
@@ -30,20 +33,27 @@ const AudioPlayer = () => {
     }
   }, [isPlaying, isAudioReady]);
 
+  const handleEnded = useCallback(() => {    
+    if (isRepeat) {
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play();
+      }
+      usePlayerStore.setState({ isPlaying: true });
+    } else {
+      playNext();
+    }
+  }, [isRepeat, playNext]);
   // Handle song ends
   useEffect(() => {
     const audio = audioRef.current;
-
-    const handleEnded = () => {
-      playNext();
-    };
 
     audio?.addEventListener("ended", handleEnded);
 
     return () => {
       audio?.removeEventListener("ended", handleEnded);
     };
-  }, [playNext]);
+  }, [handleEnded]);
 
   // Handle song changes
   useEffect(() => {

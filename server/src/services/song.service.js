@@ -145,8 +145,28 @@ const unlikeSong = async (userId, songId) => {
   }
 }
 
+const getSongById = async (songId) => {
+  try {
+    const song = await Song.findSongById(songId)
+    return song
+  } catch (error) {
+    throw error instanceof ApiError ? error : new Error(error.message)
+  }
+}
+
+const getRecommendedSongsById = async (songId) => {
+  try {
+    const recommendedSongs = await Song.getRecommendedSongsByIds(songId)
+    return recommendedSongs
+  } catch (error) {
+    throw error instanceof ApiError ? error : new Error(error.message)
+  }
+}
+
 module.exports = {
   createNewSong,
   likeSong,
-  unlikeSong
+  unlikeSong,
+  getSongById,
+  getRecommendedSongsById
 }

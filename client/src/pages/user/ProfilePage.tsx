@@ -192,9 +192,9 @@ const ProfilePage = () => {
                     artists: song.artists,
                     duration: song.duration,
                     albumName: song.albums.title,
-                    trackNumber: i + 1,
-                    itemId: song.albums._id,
+                    trackNumber: i + 1
                   }}
+                  arrayTracks={topTrack.items}
                 />
               ))}
             </div>

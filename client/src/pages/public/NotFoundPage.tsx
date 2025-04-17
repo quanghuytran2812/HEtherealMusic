@@ -1,4 +1,9 @@
-import { body_large, body_medium, error_page, img_cover } from "@/lib/classname";
+import {
+  body_large,
+  body_medium,
+  error_page,
+  img_cover,
+} from "@/lib/classname";
 import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -6,15 +11,17 @@ import { Link } from "react-router-dom";
 const NotFoundPage = () => {
   return (
     <div className={cn(error_page)}>
-      <img
-        src="https://res.cloudinary.com/dvsokroe6/image/upload/v1739503783/users/dcwgzprdkuxqpfgdavvw.png"
-        alt="HEthereal"
-        width={48}
-        height={48}
-        loading="lazy"
-        decoding="async"
-        className={cn(img_cover, "bg-[#FFFDE4] rounded-full")}
-      />
+      <div className="size-12">
+        <img
+          src="https://res.cloudinary.com/dvsokroe6/image/upload/v1739503783/users/dcwgzprdkuxqpfgdavvw.png"
+          alt="HEthereal"
+          width={48}
+          height={48}
+          loading="lazy"
+          decoding="async"
+          className={cn(img_cover, "bg-[#FFFDE4] rounded-full")}
+        />
+      </div>
 
       <div>
         <h2 className={cn("text-3xl font-bold")}>Page not found!</h2>
@@ -25,9 +32,7 @@ const NotFoundPage = () => {
       </div>
 
       <Link to="/" className="btn-error-page">
-        <p
-          className={cn(body_medium, "flex items-center gap-2 px-4 py-3")}
-        >
+        <p className={cn(body_medium, "flex items-center gap-2 px-4 py-3")}>
           <ArrowLeft size={16} />
           Back to home
         </p>

@@ -23,9 +23,18 @@ const getPlaylistById = catchAsync(async (req, res) => {
   res.status(StatusCodes.OK).send(playlist)
 })
 
+const getPlaylistsByGenre = catchAsync(async (req, res) => {
+  const { genreId } = req.params
+  const limit = parseInt(req.query.limit) || 10
+  const page = parseInt(req.query.page) || 1
+  const playlists = await playlistService.getPlaylistsByGenre(genreId, limit, page)
+  res.status(StatusCodes.OK).send(playlists)
+})
+
 module.exports = {
   createNewPlaylist,
   getPopularPlaylists,
   getTopPlaylists,
-  getPlaylistById
+  getPlaylistById,
+  getPlaylistsByGenre
 }

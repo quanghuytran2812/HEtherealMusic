@@ -15,6 +15,8 @@ const SignupPage = lazy(() => import("@/pages/public/SignupPage"));
 const NotFoundPage = lazy(() => import("@/pages/public/NotFoundPage"));
 const ProfilePage = lazy(() => import("@/pages/user/ProfilePage"));
 const AccountVerification = lazy(() => import("@/pages/public/AccountVerification"));
+const TrackPage = lazy(() => import("@/pages/public/TrackPage"));
+const GenrePage = lazy(() => import("@/pages/public/GenrePage"));
 
 const routes = [
   {
@@ -55,6 +57,14 @@ const routes = [
               {
                 path: pathname.publics.artist,
                 element: <Suspense fallback={<div>Loading...</div>}><ArtistPage /></Suspense>,
+              },
+              {
+                path: pathname.publics.track,
+                element: <Suspense fallback={<div>Loading...</div>}><TrackPage /></Suspense>,
+              },
+              {
+                path: pathname.publics.genre,
+                element: <Suspense fallback={<div>Loading...</div>}><GenrePage /></Suspense>,
               },
             ],
           },

@@ -267,6 +267,7 @@ const getTopTracks = async (userId, limit, offset) => {
           title: '$song.title',
           duration: '$song.duration',
           image_url: '$song.image_url',
+          audio_url: '$song.audio_url',
           albums: {
             _id: '$album._id',
             title: '$album.title'

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { Artist, Song, User, Playlist, PlaylistData, Album, AlbumData } from "@/utils/types";
 import { apiGetArtistTopTracks, apiGetUserById, apiRecommendArtists } from "@/apis/user";
-import { apiGetPlaylistById, apiGetPopularPlaylists, apiGetTopPlaylists } from "@/apis/playlist";
+import { apiGetPlaylistById, apiGetPlaylistsByGenre, apiGetPopularPlaylists, apiGetTopPlaylists } from "@/apis/playlist";
 import { apiGetAlbumById, apiGetAllAlbumsByArtist, apiGetNewReleases, apiRecommendAlbums } from "@/apis/album";
 
 type StoreStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -20,6 +20,7 @@ interface MusicStoreState {
   currentPlaylist: PlaylistData | null;
   playlistStatus: StoreStatus;
   playlistError: string | null;
+  playlistsByGenre: Playlist[];
   
   // Album state
   albumsReleases: Album[];
@@ -38,6 +39,7 @@ interface MusicStoreState {
   getPopularPlaylists: () => Promise<void>;
   getTopPlaylists: () => Promise<void>;
   getPlaylistById: (id: string) => Promise<void>;
+  getPlaylistsByGenre: (genre: string) => Promise<void>;
   
   // Album actions
   getNewAlbumReleases: () => Promise<void>;
@@ -65,6 +67,7 @@ export const useMusicStore = create<MusicStoreState>((set) => ({
   currentPlaylist: null,
   playlistStatus: 'idle',
   playlistError: null,
+  playlistsByGenre: [],
 
   // Initial album state
   albumsReleases: [],
@@ -204,6 +207,29 @@ export const useMusicStore = create<MusicStoreState>((set) => ({
         set({ 
           playlistStatus: 'failed',
           playlistError: 'Failed to fetch playlist'
+        });
+      }
+    } catch (error) {
+      set({ 
+        playlistStatus: 'failed',
+        playlistError: error instanceof Error ? error.message : 'Unknown error occurred'
+      });
+    }
+  },
+
+  getPlaylistsByGenre: async (genre: string) => {
+    set({ playlistStatus: 'loading', playlistError: null });
+    try {
+      const response = await apiGetPlaylistsByGenre(genre);
+      if (response.status === 200) {
+        set({ 
+          playlistsByGenre: response.data.playlists,
+          playlistStatus: 'succeeded'
+        });
+      } else {
+        set({ 
+          playlistStatus: 'failed',
+          playlistError: 'Failed to fetch playlists by genre'
         });
       }
     } catch (error) {

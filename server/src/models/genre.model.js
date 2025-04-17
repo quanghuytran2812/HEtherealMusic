@@ -59,20 +59,8 @@ const checkGenresExist = async (data) => {
 
 const findGenreById = async (id) => {
   try {
-    const genre = await Genre.findById(id).select('genre_name parent_id')
-
-    const result = await Genre.aggregate([
-      {
-        $match: { parent_id: genre.parent_id }
-      },
-      {
-        $project: {
-          _id: 1,
-          genre_name: 1
-        }
-      }
-    ])
-    return genre.parent_id === null ? genre : result
+    const genre = await Genre.findById(id).select('-updatedAt -createdAt').lean()
+    return genre
   } catch (error) {
     throw new Error(error)
   }

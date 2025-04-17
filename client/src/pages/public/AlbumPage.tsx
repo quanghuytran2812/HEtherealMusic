@@ -275,6 +275,7 @@ const AlbumPage = () => {
                         text: text.toString(),
                         link: `/album/${album._id}`,
                         image_url: album.image_url,
+                        songs: album.songs
                       }}
                     />
                   );

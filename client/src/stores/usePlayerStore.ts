@@ -7,13 +7,16 @@ interface PlayerStoreState {
   isPlaying: boolean;
   queue: Song[];
   currentIndex: number;
+  isRepeat: boolean;
+  isShuffle: boolean;
 
-  initializeQueue: (songs: Song[]) => void;
   playItem: (songs: Song[], startIndex?: number) => void;
-  setCurrentSong: (songs: Song | null) => void;
   togglePlay: () => void;
   playNext: () => void;
   playPrevious: () => void;
+  toggleRepeat: () => void;
+  toggleShuffle: () => void;
+  shuffleQueue: () => void;
   fetchRecentlyPlayed: () => Promise<void>;
 }
 
@@ -22,12 +25,9 @@ export const usePlayerStore = create<PlayerStoreState>()((set, get) => ({
   isPlaying: false,
   queue: [],
   currentIndex: -1,
+  isRepeat: false,
+  isShuffle: false,
 
-  initializeQueue: (songs: Song[]) => set({ 
-    queue: songs,
-    currentSong: get().currentSong || songs[0],
-    currentIndex: get().currentIndex === -1 ? 0 : get().currentIndex
-  }),
   playItem: (songs: Song[], startIndex = 0) => {
     if (songs.length === 0) return;
     const song = songs[startIndex];
@@ -38,22 +38,11 @@ export const usePlayerStore = create<PlayerStoreState>()((set, get) => ({
       isPlaying: true,
     });
   },
-  setCurrentSong: (song: Song | null) => {
-    if (!song) return;
-
-    const songIndex = get().queue.findIndex((s) => s._id === song._id);
-
-    set({
-      currentSong: song,
-      isPlaying: true,
-      currentIndex: songIndex !== -1 ? songIndex : get().currentIndex,
-    });
-  },
-  togglePlay: () => { 
+  togglePlay: () => {
     const willStartPlaying = !get().isPlaying;
 
     set({ isPlaying: willStartPlaying });
-   },
+  },
   playNext: () => {
     const { currentIndex, queue } = get();
     const nextIndex = currentIndex + 1;
@@ -63,12 +52,12 @@ export const usePlayerStore = create<PlayerStoreState>()((set, get) => ({
       set({
         currentIndex: nextIndex,
         currentSong: nextSong,
-        isPlaying: true
-      })
+        isPlaying: true,
+      });
     } else {
       set({
-        isPlaying: false
-      })
+        isPlaying: false,
+      });
     }
   },
   playPrevious: () => {
@@ -80,15 +69,52 @@ export const usePlayerStore = create<PlayerStoreState>()((set, get) => ({
       set({
         currentIndex: prevIndex,
         currentSong: prevSong,
-        isPlaying: true
-      })
+        isPlaying: true,
+      });
     } else {
       set({
-        isPlaying: false
-      })
+        isPlaying: false,
+      });
     }
   },
+  toggleRepeat: () => {
+    set({ isRepeat: !get().isRepeat });
+  },
+
+  toggleShuffle: () => {
+    const isShuffle = !get().isShuffle;
+    set({ isShuffle });
+    if (isShuffle) {
+      get().shuffleQueue();
+    }
+  },
+  shuffleQueue: () => {
+    const { queue, currentIndex } = get();
+    if (queue.length <= 1) return;
+
+    // Create a copy of the queue without the current song
+    const queueCopy = [...queue];
+    const currentSongItem = queueCopy.splice(currentIndex, 1)[0];
+
+    // Fisher-Yates shuffle algorithm
+    for (let i = queueCopy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [queueCopy[i], queueCopy[j]] = [queueCopy[j], queueCopy[i]];
+    }
+
+    // Put current song back at the beginning
+    queueCopy.unshift(currentSongItem);
+
+    set({
+      queue: queueCopy,
+      currentIndex: 0,
+      currentSong: currentSongItem,
+    });
+  },
   fetchRecentlyPlayed: async () => {
+    // Only fetch if queue is empty
+    if (get().queue.length > 0) return;
+
     const response = await apiGetRecentlyPlayed();
     if (response.status === 200 && response.data.items) {
       const songs = response.data.items[0].track.songs;
@@ -97,8 +123,8 @@ export const usePlayerStore = create<PlayerStoreState>()((set, get) => ({
       set({
         queue: songs,
         currentSong: song,
-        currentIndex: 0
+        currentIndex: 0,
       });
     }
-  }
-}))
+  },
+}));

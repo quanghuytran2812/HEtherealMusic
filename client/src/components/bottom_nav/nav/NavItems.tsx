@@ -1,5 +1,5 @@
 import { NavItem } from "@/utils/types";
-import { Compass, Home, ListMusic } from "lucide-react";
+import { Compass, Home } from "lucide-react";
 
 const navItems: NavItem[] = [
   {
@@ -11,12 +11,7 @@ const navItems: NavItem[] = [
     href: "/explore",
     icon: Compass,
     text: "Explore",
-  },
-  {
-    href: "/library",
-    icon: ListMusic,
-    text: "Library",
-  },
+  }
 ];
 
 export default navItems;

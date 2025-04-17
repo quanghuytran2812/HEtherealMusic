@@ -22,7 +22,7 @@ const CardGenre = ({ genre }: CardGenreProps) => {
         </h3>
       </div>
 
-      <Link to={`/search/${genre._id}`} className={cn(card_link)} aria-label={`Explore ${genre.genre_name}`}></Link>
+      <Link to={`/genre/${genre._id}`} className={cn(card_link)} aria-label={`Explore ${genre.genre_name}`}></Link>
 
       <div className="state-layer"></div>
     </div>

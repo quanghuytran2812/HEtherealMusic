@@ -12,7 +12,11 @@ const songSchema = mongoose.Schema(
     popularity: { type: Number, default: 0 },
     views: { type: Number, default: 0 },
     isExplicit: { type: Boolean, default: false },
-    type: { type: String, enum: enumData.songType, default: enumData.songType[0] },
+    type: {
+      type: String,
+      enum: enumData.songType,
+      default: enumData.songType[0]
+    },
     artists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     albums: { type: mongoose.Schema.Types.ObjectId, ref: 'Album' }
   },
@@ -30,21 +34,21 @@ const schema = Joi.object({
   audio_url: Joi.string().trim().required().messages({
     'string.empty': messageSong.audio_url.required
   }),
-  duration: Joi.number()
-    .integer()
-    .min(0)
-    .required()
-    .messages({
-      'number.base': messageSong.duration.base,
-      'number.integer': messageSong.duration.integer,
-      'number.min': messageSong.duration.min,
-      'any.required': messageSong.duration.required
-    }),
-  isExplicit: Joi.boolean().optional(),
-  type: Joi.string().trim().required().valid(...Object.values(enumData.songType)).messages({
-    'string.empty': messageSong.type.required,
-    'any.only': messageSong.type.valid
+  duration: Joi.number().integer().min(0).required().messages({
+    'number.base': messageSong.duration.base,
+    'number.integer': messageSong.duration.integer,
+    'number.min': messageSong.duration.min,
+    'any.required': messageSong.duration.required
   }),
+  isExplicit: Joi.boolean().optional(),
+  type: Joi.string()
+    .trim()
+    .required()
+    .valid(...Object.values(enumData.songType))
+    .messages({
+      'string.empty': messageSong.type.required,
+      'any.only': messageSong.type.valid
+    }),
   artists: Joi.array()
     .items(Joi.string().required())
     .min(1)
@@ -53,11 +57,9 @@ const schema = Joi.object({
       'array.min': messageSong.artists.required,
       'any.required': messageSong.artists.required
     }),
-  albums: Joi.string()
-    .required()
-    .messages({
-      'string.empty': messageSong.albums.required
-    })
+  albums: Joi.string().required().messages({
+    'string.empty': messageSong.albums.required
+  })
 })
 // Indicates which Fields we do not allow to be updated in the Song()
 const INVALID_UPDATE_FIELD = ['_id', 'createdAt']
@@ -82,7 +84,21 @@ const createNewSong = async (data) => {
 const findSongById = async (id) => {
   try {
     const song = await Song.findById(id)
-    return song
+      .populate({
+        path: 'artists',
+        select: '_id name imageUrl'
+      })
+      .populate('albums', '_id title createdAt')
+      .select('-updatedAt')
+      .lean()
+    return {
+      ...song,
+      artists: song.artists.map((artist) => ({
+        _id: artist._id,
+        name: artist.name,
+        image_url: artist.imageUrl[artist.imageUrl.length - 1]
+      }))
+    }
   } catch (error) {
     throw new Error(error)
   }
@@ -114,30 +130,39 @@ const searchSongs = async (query, limit = 4) => {
   return await Song.aggregate([
     { $match: { title: { $regex: query, $options: 'i' } } },
     { $limit: limit },
-    { $project: { _id: 1, title: 1, image_url: 1, artists: 1, duration: 1, albums: 1 } },
-    { $lookup: {
-      from: 'users',
-      localField: 'artists',
-      foreignField: '_id',
-      as: 'artists',
-      pipeline: [
-        { $project: { _id: 1, name: 1 } }
-      ]
-    } },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        image_url: 1,
+        artists: 1,
+        duration: 1,
+        albums: 1
+      }
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'artists',
+        foreignField: '_id',
+        as: 'artists',
+        pipeline: [{ $project: { _id: 1, name: 1 } }]
+      }
+    },
     {
       $lookup: {
         from: 'albums',
         localField: 'albums',
         foreignField: '_id',
         as: 'albums',
-        pipeline: [
-          { $project: { _id: 1, title: 1 } }
-        ]
+        pipeline: [{ $project: { _id: 1, title: 1 } }]
       }
     },
-    { $addFields: {
-      albums: { $arrayElemAt: ['$albums', 0] } // Convert albums array to single object
-    } }
+    {
+      $addFields: {
+        albums: { $arrayElemAt: ['$albums', 0] } // Convert albums array to single object
+      }
+    }
   ])
 }
 
@@ -153,9 +178,7 @@ const getArtistTopTracks = async (artistId, limit = 10) => {
           localField: 'artists',
           foreignField: '_id',
           as: 'artists',
-          pipeline: [
-            { $project: { _id: 1, name: 1 } }
-          ]
+          pipeline: [{ $project: { _id: 1, name: 1 } }]
         }
       },
       // Lookup to populate album details
@@ -165,15 +188,15 @@ const getArtistTopTracks = async (artistId, limit = 10) => {
           localField: 'albums',
           foreignField: '_id',
           as: 'album',
-          pipeline: [
-            { $project: { _id: 1, title: 1 } }
-          ]
+          pipeline: [{ $project: { _id: 1, title: 1 } }]
         }
       },
       // Convert arrays to single objects where needed
-      { $addFields: {
-        albums: { $arrayElemAt: ['$album', 0] }
-      } },
+      {
+        $addFields: {
+          albums: { $arrayElemAt: ['$album', 0] }
+        }
+      },
       // Project final format
       {
         $project: {
@@ -191,6 +214,122 @@ const getArtistTopTracks = async (artistId, limit = 10) => {
       }
     ])
     return tracks
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const getAlbumGenresBySongId = async (songId) => {
+  try {
+    const song = await Song.findById(songId)
+      .populate({
+        path: 'albums',
+        select: 'genres',
+        populate: {
+          path: 'genres',
+          select: '_id'
+        }
+      })
+      .lean()
+
+    if (!song || !song.albums) {
+      return []
+    }
+
+    return song.albums.genres
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const getRecommendedSongsByIds = async (songId, limit = 5) => {
+  try {
+    // First get the genres from the song's album
+    const genres = await getAlbumGenresBySongId(songId)
+
+    if (!genres || genres.length === 0) {
+      // Fallback: return popular songs if no genres found
+      return []
+    }
+
+    // Get songs from albums that share at least one genre
+    const recommendedSongs = await Song.aggregate([
+      // Exclude the original song first
+      { $match: { _id: { $ne: new mongoose.Types.ObjectId(songId) } } },
+      // Lookup to get album details including genres
+      {
+        $lookup: {
+          from: 'albums',
+          localField: 'albums',
+          foreignField: '_id',
+          as: 'albumData',
+          pipeline: [
+            {
+              $lookup: {
+                from: 'genres',
+                localField: 'genres',
+                foreignField: '_id',
+                as: 'albumGenres'
+              }
+            },
+            { $project: { albumGenres: 1 } }
+          ]
+        }
+      },
+      // Unwind the albumData array
+      { $unwind: '$albumData' },
+      // Match songs where the album has at least one genre in common
+      {
+        $match: {
+          'albumData.albumGenres._id': {
+            $in: genres.map((g) => g._id)
+          }
+        }
+      },
+      // Group by song _id to prevent duplicates
+      {
+        $group: {
+          _id: '$_id',
+          doc: { $first: '$$ROOT' }
+        }
+      },
+      // Replace root with the original document
+      { $replaceRoot: { newRoot: '$doc' } },
+      // Sort by popularity and views
+      { $sort: { popularity: -1, views: -1 } },
+      // Limit results
+      { $limit: limit },
+      // Lookup to populate artists
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'artists',
+          foreignField: '_id',
+          as: 'artists',
+          pipeline: [{ $project: { _id: 1, name: 1 } }]
+        }
+      },
+      // Lookup to populate album (full details)
+      {
+        $lookup: {
+          from: 'albums',
+          localField: 'albums',
+          foreignField: '_id',
+          as: 'album',
+          pipeline: [{ $project: { _id: 1, title: 1 } }]
+        }
+      },
+      // Convert album array to single object
+      {
+        $addFields: {
+          albums: { $arrayElemAt: ['$album', 0] }
+        }
+      },
+      // Remove temporary fields
+      { $project: { albumData: 0, album: 0 } }
+    ])
+
+    return recommendedSongs
   } catch (error) {
     throw new Error(error)
   }
@@ -224,5 +363,6 @@ module.exports = {
   getRandomSongs,
   checkSongsExist,
   searchSongs,
-  getArtistTopTracks
+  getArtistTopTracks,
+  getRecommendedSongsByIds
 }

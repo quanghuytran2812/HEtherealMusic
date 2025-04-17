@@ -25,13 +25,14 @@ const ListLibrary = ({ item, index }: ListLibraryProps) => {
     const foundSong = item.track.songs?.find(
       (song) => song === currentSong?._id
     );
-    return foundSong || undefined; // Return the found song ID or undefined if not found
+    return foundSong || (item?.track.songs && item?.track.songs[0]); // Return the found song ID or undefined if not found
   }, [item.track.songs, currentSong]);
 
   const isCurrentSong = useMemo(
     () => item.track.songs?.some((song) => song === currentSong?._id),
     [item.track.songs, currentSong]
   );
+
   return (
     <div className={cn(list_item, "group")} key={index}>
       <div className={cn("relative")}>

@@ -103,11 +103,14 @@ export const endpoints = {
   },
   genre: {
     getAllGenres: "/genre/get-all-genres",
+    getGenreById: "/genre/get-genre-by-id/",
   },
   song: {
     createSong: "/song/create-new-song",
     likeSong: "/song/like-song",
-    unlikeSong: "/song/unlike-song/"
+    unlikeSong: "/song/unlike-song/",
+    getSongById: "/song/get-song-by-id/",
+    getRecommendedSongsByIds: "/song/get-recommended-songs/"
   },
   album: {
     newRelease: "/album/new-release-albums",
@@ -123,6 +126,7 @@ export const endpoints = {
     getPopularPlaylists: "/playlist/get-popular-playlists",
     getTopPlaylists: "/playlist/get-top-playlists",
     getPlaylistById: "/playlist/get-playlist-by-id/",
+    getPlaylistsByGenre: "/playlist/get-playlists-by-genre/",
   },
   library: {
     getLibraryForMe: "/library/get-library-by-user",

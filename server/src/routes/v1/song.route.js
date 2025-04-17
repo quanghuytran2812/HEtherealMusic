@@ -14,5 +14,7 @@ router.post('/create-new-song',
   songController.createNewSong)
 router.post('/like-song', authMiddleware.isAuthorized, songController.likeSong)
 router.delete('/unlike-song/:songId', authMiddleware.isAuthorized, songController.unlikeSong)
+router.get('/get-song-by-id/:songId', songController.getSongById)
+router.get('/get-recommended-songs/:songId', songController.getRecommendedSongsByIds)
 
 module.exports = router

@@ -12,3 +12,7 @@ export const apiGetTopPlaylists = () => {
 export const apiGetPlaylistById = (id: string) => {
   return axios.get(endpoints.playlist.getPlaylistById + id);
 };
+
+export const apiGetPlaylistsByGenre = (genre: string) => {
+  return axios.get(endpoints.playlist.getPlaylistsByGenre + genre);
+}

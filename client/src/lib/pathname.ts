@@ -12,6 +12,7 @@ export const pathname = {
     album: "album/:albumId",
     playlist: "playlist/:playlistId",
     artist: "artist/:artistId",
+    track: "track/:trackId",
   },
   users: {
     account: "/account",

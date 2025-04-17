@@ -11,7 +11,7 @@ export const search_field = 'placeholder:text-[#C0C9C1] px-3 text-[#C5C7C3]'
 export const top_bar = 'lg:-mx-6 lg:px-6 md:-mx-4 md:gap-2 fixed top-[2px] left-0 right-0 h-16 bg-gradient-to-b from-[#191C1A] to-[#191C1A00] px-4 flex items-center duration-200 ease-in-out z-10'
 
 // BOTTOM NAV
-export const bottom_nav = 'fixed bottom-0 left-0 w-full h-20 grid grid-cols-3 gap-2 bg-[#1D201E] shadow-md z-10 transition-all duration-200'
+export const bottom_nav = 'fixed bottom-0 left-0 w-full h-20 grid grid-cols-2 gap-2 bg-[#1D201E] shadow-md z-10 transition-all duration-200'
 export const bottom_nav_item = 'py-3 px-4 text-center text-[#C5C7C3]'
 export const icon_wrapper = 'w-16 h-8 grid place-items-center mx-auto overflow-hidden rounded-full text-[#C5C7C3]'
 // FORM INPUT
@@ -19,11 +19,11 @@ export const formInput = "h-12 text-base font-normal p-3 bg-transparent border b
 // COMMON
 export const body_medium = 'text-sm font-normal'
 export const body_large = 'text-base font-normal'
-export const body_small = 'text-xs font-normal tracking-[0.50px]'
-export const label_large = 'text-sm leading-[20px] font-normal tracking-[0.1px]'
+export const body_small = 'text-xs font-normal'
+export const label_large = 'text-xs leading-[20px] font-normal tracking-[0.1px]'
 export const label_small = 'text-[0.6875rem] font-normal tracking-[0.50px]'
 export const label_medium = 'text-xs font-medium tracking-[0.5px]'
-export const title_large = 'text-lg font-bold'
+export const title_large = 'text-lg font-bold leading-[20px] tracking-[0.1px]'
 export const title_medium = 'text-base font-normal tracking-[0.15px]'
 export const btn_follow = 'text-sm font-bold border border-[#818181] rounded-full hover:scale-105 hover:border-white hover:text-white'
 
@@ -54,6 +54,8 @@ export const section = 'mt-4 min-h-[300px]'
 export const list_header = 'sticky top-0 flex items-center p-4 gap-4 text-gray-300 border-b border-gray-700 transition-all duration-200'
 export const copyright = 'grid text-[#C0C9C1] py-4 gap-1 px-4 isolate'
 // LIST ITEM
+export const artist_list = 'flex flex-col'
+export const artist_item = 'h-20 flex py-2 px-4 items-center gap-4 relative hover:bg-white/5'
 export const list_item = 'h-16 flex py-2 px-4 items-center gap-4 relative hover:bg-white/5'
 export const item_content = 'grid grid-cols-[minmax(0,1fr)_42px] items-center gap-4 flex-grow min-w-0'
 export const item_number = 'relative md:block hidden md:flex md:items-center md:justify-center md:w-7'

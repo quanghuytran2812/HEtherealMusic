@@ -79,9 +79,19 @@ const getPlaylistById = async (playlistId) => {
   }
 }
 
+const getPlaylistsByGenre = async (genreId, limit, page) => {
+  try {
+    const playlists = await PlayList.findPlaylistsByGenre(genreId, limit, page)
+    return playlists
+  } catch (error) {
+    throw error instanceof ApiError ? error : new Error(error.message)
+  }
+}
+
 module.exports = {
   createNewPlaylist,
   getPopularPlaylists,
   getTopPlaylists,
-  getPlaylistById
+  getPlaylistById,
+  getPlaylistsByGenre
 }

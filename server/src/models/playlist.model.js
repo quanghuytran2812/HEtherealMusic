@@ -194,6 +194,83 @@ const searchPlaylists = async (query, limit = 5) => {
   ])
 }
 
+const findPlaylistsByGenre = async (genreId, limit = 10, page = 1) => {
+  try {
+    const skip = (page - 1) * limit
+
+    const playlists = await Playlist.aggregate([
+      // Match playlists that contain the genreId
+      { $match: { genres: new mongoose.Types.ObjectId(genreId), isPublic: true } },
+
+      // Pagination
+      { $skip: skip },
+      { $limit: limit },
+
+      // Lookup to populate user details
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'users',
+          foreignField: '_id',
+          as: 'user',
+          pipeline: [
+            { $project: { _id: 1, name: 1 } }
+          ]
+        }
+      },
+
+      // Convert user array to single object
+      { $addFields: { user: { $arrayElemAt: ['$user', 0] } } },
+
+      // Lookup to get song count
+      {
+        $lookup: {
+          from: 'songs',
+          localField: 'songs',
+          foreignField: '_id',
+          as: 'songs'
+        }
+      },
+
+      // Add songCount field
+      { $addFields: { songCount: { $size: '$songs' } } },
+
+      // Project final fields
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          description: 1,
+          image_url: 1,
+          saves: 1,
+          type: 1,
+          user: 1,
+          songCount: 1,
+          createdAt: 1
+        }
+      },
+
+      // Sort by popularity (saves) and recency
+      { $sort: { saves: -1, createdAt: -1 } }
+    ])
+
+    // Get total count for pagination
+    const totalCount = await Playlist.countDocuments({
+      genres: new mongoose.Types.ObjectId(genreId),
+      isPublic: true
+    })
+
+    return {
+      playlists,
+      totalCount,
+      totalPages: Math.ceil(totalCount / limit),
+      currentPage: page
+    }
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 const removePlaylist = async (id) => {
   try {
     const playlist = await Playlist.findByIdAndDelete(id)
@@ -232,5 +309,6 @@ module.exports = {
   findTopPlaylists,
   searchPlaylists,
   findPlaylistsExist,
-  removePlaylist
+  removePlaylist,
+  findPlaylistsByGenre
 }

@@ -14,6 +14,7 @@ interface PlayButtonProps {
   sizeIcon?: number;
   songId?: string;
   itemId?: string;
+  arrSongs?: Song[];
 }
 
 const PlayButton = ({
@@ -22,7 +23,8 @@ const PlayButton = ({
   fillColor,
   sizeIcon,
   itemId,
-  songId
+  songId,
+  arrSongs = []
 }: PlayButtonProps) => {
   const { isPlaying, currentSong, togglePlay, playItem } = usePlayerStore();
   const isCurrentSong = useMemo(() => songId === currentSong?._id, [songId, currentSong]);
@@ -34,10 +36,13 @@ const PlayButton = ({
       if (response.status === 200) {
         const songs = response.data.items[0].track.songs;
         const index = songs.findIndex((song: Song) => song._id === songId);
-        playItem(songs, index > 0 ? index : 0);
+        playItem(songs, index >= 0 ? index : 0);
       }
+    }else {
+      const index = arrSongs.findIndex((song: Song) => song._id === songId);
+      playItem(arrSongs, index >= 0 ? index : 0);
     }
-  }, [playItem, songId]);
+  }, [playItem, songId, arrSongs]);
 
   const handleClickPlay = useCallback(async () => {
     if (!songId) return;

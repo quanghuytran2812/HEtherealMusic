@@ -165,6 +165,7 @@ const findAllAlbumsByArtist = async (artistId) => {
       _id: album._id,
       title: album.title,
       image_url: album.image_url,
+      songs: album.songs,
       createdAt: album.createdAt
     }))
   } catch (error) {
