@@ -1,7 +1,7 @@
 const { env } = require('@/config/environment.config')
 
 const WHITELIST_DOMAINS = [
-  env.CLIENT_URL
+  'https://h-ethereal-music-web.vercel.app/'
 ]
 
 const enumData = {
