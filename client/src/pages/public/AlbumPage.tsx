@@ -66,7 +66,9 @@ const AlbumPage = () => {
   // Check if album is in library
   const isAlbumInLibrary = useMemo(() => {
     return (
-      libraryMe?.items?.some((item) => item.type === "Album" && item.track._id === currentAlbum?._id) || false
+      libraryMe?.items?.some(
+        (item) => item.type === "Album" && item.track._id === currentAlbum?._id
+      ) || false
     );
   }, [libraryMe, currentAlbum]);
 
@@ -174,12 +176,16 @@ const AlbumPage = () => {
             <IconButton
               icon={
                 isAlbumInLibrary ? (
-                  <Check size={16} className="text-black" strokeWidth={4}/>
+                  <Check size={16} className="text-black" strokeWidth={4} />
                 ) : (
                   <CirclePlus size={24} />
                 )
               }
-              classSpan={`hover:scale-105 ${isAlbumInLibrary ? "size-7 bg-[#12E29A] rounded-full" : "hover:text-white"}`}
+              classSpan={`hover:scale-105 ${
+                isAlbumInLibrary
+                  ? "size-7 bg-[#12E29A] rounded-full"
+                  : "hover:text-white"
+              }`}
               onClick={handleLibraryToggle}
               disabled={isLibraryLoading}
             />
@@ -251,7 +257,7 @@ const AlbumPage = () => {
                 More by {currentAlbum?.artists?.[0]?.name || "N/A"}
               </h2>
 
-              <Link to={`/artist`} className="btn btn-link">
+              <Link to={`/artist/${currentAlbum?.artists?.[0]?._id}/discography/all`} className="btn btn-link">
                 <span
                   className={cn(label_large, "hover:underline text-[#C0C9C1]")}
                 >
@@ -266,6 +272,7 @@ const AlbumPage = () => {
                   const text = album.createdAt
                     ? new Date(album.createdAt).getFullYear()
                     : "Unknown Year";
+                  const arraySongs = album.songs?.map((song) => song._id) || [];
                   return (
                     <CardMore
                       key={album._id}
@@ -275,7 +282,7 @@ const AlbumPage = () => {
                         text: text.toString(),
                         link: `/album/${album._id}`,
                         image_url: album.image_url,
-                        songs: album.songs
+                        songs: arraySongs,
                       }}
                     />
                   );

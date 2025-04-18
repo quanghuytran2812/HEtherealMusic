@@ -24,7 +24,7 @@ interface MusicStoreState {
   
   // Album state
   albumsReleases: Album[];
-  albumsByArtist: Album[];
+  albumsByArtist: AlbumData[];
   recommendAlbums: Album[];
   currentAlbum: AlbumData | null;
   albumStatus: StoreStatus;

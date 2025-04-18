@@ -13,10 +13,11 @@ export const pathname = {
     playlist: "playlist/:playlistId",
     artist: "artist/:artistId",
     track: "track/:trackId",
+    listAlbumDetail: "artist/:artistId/discography/all"
   },
   users: {
     account: "/account",
-    profile: "/profile",
+    profile: "/user/:userId",
     setting: "/setting"
   },
   admin: {

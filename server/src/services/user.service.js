@@ -5,8 +5,8 @@ const { BrevoEmail } = require('@/utils/brevoEmail.utils')
 const { env } = require('@/config/environment.config')
 import { v4 as uuidv4 } from 'uuid'
 import { CloudinaryProvider } from '@/utils/cloudinary.utils'
-import { pickKeysFromUser } from '@/utils/helper.utils'
 import { ApiError } from '@/utils/apiError.utils'
+import { pickKeysFromUser } from '@/utils/helper.utils'
 
 const hashPassword = (password) =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(10))

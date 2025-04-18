@@ -1,17 +1,8 @@
 import { CardMore } from "@/components/cards";
-import { ProfileUpdateDialog } from "@/components/dialogs";
+import { ProfileHeader } from "@/components/headers";
 import { ListItem } from "@/components/list";
 import {
-  detail_banner,
-  detail_content,
-  detail_header,
-  detail_subtitle,
-  detail_text,
-  detail_title,
   divider,
-  headline_large,
-  img_cover,
-  img_holder,
   label_large,
   slider,
   slider_inner,
@@ -21,78 +12,71 @@ import {
 import { cn } from "@/lib/utils";
 import { useFollowStore } from "@/stores/useFollowStore";
 import { useMeStore } from "@/stores/useMeStore";
-import { Pen, User } from "lucide-react";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo } from "react";
+import { Link, useParams } from "react-router-dom";
 
 const ProfilePage = () => {
-  const { me, topArtist, topTrack, getTopArtist, getTopTrack } = useMeStore();
-  const { artistsFollowed, fetchArtistsFollowedByUser } = useFollowStore();
+  const { userId } = useParams();
+  const {
+    topArtist,
+    topTrack,
+    userInfo,
+    getTop,
+    getUserById,
+    isLoading: userLoading,
+  } = useMeStore();
+  const {
+    artistsFollowed,
+    fetchArtistsFollowedByUser,
+    isLoading: followLoading,
+  } = useFollowStore();
 
   useEffect(() => {
     const fetchData = async () => {
-      await Promise.all([getTopArtist(), getTopTrack(), fetchArtistsFollowedByUser()]);
+      await Promise.all([
+        getTop("artists"),
+        getTop("tracks"),
+        fetchArtistsFollowedByUser(),
+      ]);
     };
     fetchData();
-  }, [getTopArtist, getTopTrack, fetchArtistsFollowedByUser]);
+  }, [getTop, fetchArtistsFollowedByUser]);
+
+  useEffect(() => {
+    if (userId) {
+      getUserById(userId);
+    }
+  }, [getUserById, userId]);
+
+  const backgroundImage = useMemo(() => {
+    if (!userInfo?.imageUrl || userInfo.imageUrl.length === 0) return null;
+    return userInfo.imageUrl[userInfo.imageUrl.length - 1];
+  }, [userInfo]);
+
+  if (userLoading || followLoading) {
+    return <div className="p-4 text-center">Loading profile...</div>;
+  }
+
+  if (!userInfo) {
+    return <div className="p-4 text-center">User not found</div>;
+  }
 
   return (
     <div className="relative pt-10 md:pt-0 md:rounded-lg md:overflow-hidden">
-      {me && me.imageUrl && me.imageUrl.length > 0 && (
-        <div
-          className="absolute inset-0 h-[450px] bg-no-repeat bg-cover opacity-50"
-          style={{
-            backgroundImage: `url(${me.imageUrl[me.imageUrl.length - 1]})`,
-            backgroundSize: "100%",
-            backgroundPosition: "top",
-          }}
-        />
-      )}
+      <div
+        className="absolute inset-0 h-[450px] bg-no-repeat bg-cover opacity-50"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "100%",
+          backgroundPosition: "top",
+        }}
+      />
       <div className="absolute inset-0 h-[450px] bg-gradient-to-b from-transparent to-[#191C1A] backdrop-blur-[150px]" />
       {/* PROFILE */}
-      <section className={cn(detail_header)}>
-        <figure
-          className={cn(
-            img_holder,
-            detail_banner,
-            "rounded-full group relative flex items-center justify-center"
-          )}
-        >
-          {me && me.imageUrl && me.imageUrl.length > 0 ? (
-            <img
-              src={me.imageUrl[me.imageUrl.length - 1]}
-              alt={me?.name}
-              width={300}
-              height={300}
-              loading="lazy"
-              decoding="async"
-              className={cn(img_cover)}
-            />
-          ) : (
-            <User size={48} className="text-[#b3b3b390]" />
-          )}
-          <div className="hidden group-hover:block cursor-pointer w-full h-full absolute top-0 left-0 rounded-full bg-black/70">
-            <ProfileUpdateDialog
-              triggerContent={
-                <div className="flex flex-col h-full justify-center items-center gap-1">
-                  <Pen size={48} />
-                  <p className="text-base font-normal">Choose photo</p>
-                </div>
-              }
-            />
-          </div>
-        </figure>
-
-        <div className={cn(detail_content)}>
-          <p className={cn(label_large, detail_subtitle)}>Profile</p>
-
-          <h2 className={cn(headline_large, detail_title)}>{me?.name}</h2>
-
-          <div className={cn(detail_text, "flex-wrap has-separator")}>
-            <p className={cn(label_large)}>{artistsFollowed?.items.length} Following</p>
-          </div>
-        </div>
-      </section>
+      <ProfileHeader
+        userInfo={userInfo}
+        followingCount={artistsFollowed?.items.length || 0}
+      />
 
       <div className="relative p-4">
         <div className="absolute inset-0 h-full bg-gradient-to-b from-transparent to-[#000] backdrop-blur-[150px]" />
@@ -192,7 +176,7 @@ const ProfilePage = () => {
                     artists: song.artists,
                     duration: song.duration,
                     albumName: song.albums.title,
-                    trackNumber: i + 1
+                    trackNumber: i + 1,
                   }}
                   arrayTracks={topTrack.items}
                 />

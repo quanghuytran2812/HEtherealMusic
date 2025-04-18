@@ -205,7 +205,7 @@ const ArtistPage = () => {
           <section className="mt-4 isolate">
             <div className={cn(title_wrapper)}>
               <h2 className={cn(title_large, section_title)}>Discography</h2>
-              <Link to={`/artist`} className="btn btn-link">
+              <Link to={`/artist/${artistId}/discography/all`} className="btn btn-link">
                 <span className={cn(label_large, "hover:underline text-[#C0C9C1]")}>
                   Show all
                 </span>
@@ -218,6 +218,7 @@ const ArtistPage = () => {
                   const text = album.createdAt
                     ? new Date(album.createdAt).getFullYear()
                     : "Unknown Year";
+                  const arraySongs = album.songs?.map((song) => song._id) || [];
                   return (
                     <CardMore
                       key={album._id}
@@ -227,6 +228,7 @@ const ArtistPage = () => {
                         text: text.toString(),
                         link: `/album/${album._id}`,
                         image_url: album.image_url,
+                        songs: arraySongs
                       }}
                     />
                   );

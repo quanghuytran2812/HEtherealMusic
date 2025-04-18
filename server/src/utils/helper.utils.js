@@ -8,7 +8,7 @@ const pickKeysFromObject = (obj, keys) => {
 }
 
 const pickKeysFromUser = (user) => {
-  return pickKeysFromObject(user, ['name', 'email', 'dob', 'imageUrl', 'genres', 'popularity', 'gender', 'type'])
+  return pickKeysFromObject(user, ['_id', 'name', 'type', 'imageUrl'])
 }
 
 module.exports = { pickKeysFromUser }

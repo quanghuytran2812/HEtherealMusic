@@ -5,7 +5,7 @@ interface HeroSectionProps {
 
 const HeroSection = ({ title, backgroundImage }: HeroSectionProps) => {
   return (
-    <div className="relative w-full h-[40vh] overflow-hidden">
+    <div className="relative w-full h-[40vh] overflow-hidden z-10">
       <div
         className="absolute inset-0 bg-no-repeat bg-cover"
         style={{

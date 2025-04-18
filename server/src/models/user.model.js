@@ -2,7 +2,11 @@ const { enumData } = require('@/utils/constants.utils')
 const Joi = require('joi')
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
-const { messages, validateDob, passwordModelRegex } = require('@/validations/custom.validation')
+const {
+  messages,
+  validateDob,
+  passwordModelRegex
+} = require('@/validations/custom.validation')
 
 const userSchema = mongoose.Schema(
   {
@@ -30,11 +34,17 @@ const schema = Joi.object({
     'string.empty': messages.email.required,
     'string.email': messages.email.invalid
   }),
-  password: Joi.string().trim().required().min(10).regex(passwordModelRegex).optional().messages({
-    'string.empty': messages.password.required,
-    'string.pattern.base': messages.password.base,
-    'string.min': messages.password.min
-  }),
+  password: Joi.string()
+    .trim()
+    .required()
+    .min(10)
+    .regex(passwordModelRegex)
+    .optional()
+    .messages({
+      'string.empty': messages.password.required,
+      'string.pattern.base': messages.password.base,
+      'string.min': messages.password.min
+    }),
   name: Joi.string().trim().required().min(3).max(30).messages({
     'string.empty': messages.name.required,
     'string.min': messages.name.min,
@@ -45,16 +55,17 @@ const schema = Joi.object({
     'any.custom': messages.dob.type,
     'any.invalid': messages.dob.invalid
   }),
-  gender: Joi.string().trim().required().valid(...Object.values(enumData.gender)).messages({
-    'string.empty': messages.gender.required,
-    'any.only': messages.gender.invalid
-  }),
-  imageUrl: Joi.array().items(Joi.string())
-    .min(1)
-    .optional()
+  gender: Joi.string()
+    .trim()
+    .required()
+    .valid(...Object.values(enumData.gender))
     .messages({
-      'array.min': messages.imageUrl.required
+      'string.empty': messages.gender.required,
+      'any.only': messages.gender.invalid
     }),
+  imageUrl: Joi.array().items(Joi.string()).min(1).optional().messages({
+    'array.min': messages.imageUrl.required
+  }),
   verified_email: Joi.boolean().optional().messages({
     'boolean.base': messages.verified_email.invalid,
     'any.only': messages.verified_email.notBoolean
@@ -102,7 +113,9 @@ const comparePassword = async (inputPassword, storedPassword) => {
 
 const findUserById = async (id) => {
   try {
-    const user = await User.findById(id).lean()
+    const user = await User.findById(id)
+      .select('-createdAt -updatedAt -isDeleted -password -verified_email -verifyToken')
+      .lean()
     return user
   } catch (error) {
     throw new Error(error)
@@ -142,7 +155,10 @@ const getRandomArtist = async () => {
 
 const findRecommendArtists = async (artistIds) => {
   try {
-    const recommendations = await User.find({ _id: { $in: artistIds } }).select('_id name imageUrl type').limit(5).lean()
+    const recommendations = await User.find({ _id: { $in: artistIds } })
+      .select('_id name imageUrl type')
+      .limit(5)
+      .lean()
     return recommendations.map((artist) => ({
       _id: artist._id,
       name: artist.name,
@@ -164,12 +180,14 @@ const searchArtists = async (query, limit = 5) => {
       }
     },
     { $limit: limit },
-    { $project: {
-      _id: 1,
-      name: 1,
-      image_url: { $arrayElemAt: ['$imageUrl', -1] },
-      type: 1
-    } }
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        image_url: { $arrayElemAt: ['$imageUrl', -1] },
+        type: 1
+      }
+    }
   ])
 }
 
@@ -177,12 +195,14 @@ const searchUsers = async (query, limit = 5) => {
   return await User.aggregate([
     { $match: { name: { $regex: query, $options: 'i' }, type: 'user' } },
     { $limit: limit },
-    { $project: {
-      _id: 1,
-      name: 1,
-      image_url: { $arrayElemAt: ['$imageUrl', -1] },
-      type: 1
-    } }
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        image_url: { $arrayElemAt: ['$imageUrl', -1] },
+        type: 1
+      }
+    }
   ])
 }
 

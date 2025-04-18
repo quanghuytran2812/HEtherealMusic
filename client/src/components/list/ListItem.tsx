@@ -40,6 +40,7 @@ interface ListItemProps {
 const ListItem = ({ track, arrayTracks = [] }: ListItemProps) => {
   const { isPlaying, currentSong } = usePlayerStore();
   const { libraryMe, fetchLibraryMe } = useLibraryStore();
+  const menuActions = MenuActions();
   const {
     isLoading: isSongLoading,
     addLikedSong,
@@ -182,7 +183,7 @@ const ListItem = ({ track, arrayTracks = [] }: ListItemProps) => {
             </p>
           )}
           <MenuDropdown
-            items={MenuActions}
+            items={menuActions}
             itemMenuTrigger={
               <Button
                 className={cn(

@@ -131,7 +131,7 @@ const PlaylistPage = () => {
             {currentPlaylist?.users && (
               <React.Fragment key={currentPlaylist?.users._id}>
                 <Link
-                  to={`/users/${currentPlaylist?.users._id}`}
+                  to={`/user/${currentPlaylist?.users._id}`}
                   key={currentPlaylist?.users._id}
                   className={cn(
                     label_large,

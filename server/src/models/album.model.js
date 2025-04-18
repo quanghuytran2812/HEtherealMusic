@@ -160,11 +160,20 @@ const findAllAlbumsByArtist = async (artistId) => {
   try {
     const albums = await Album.find({ artists: artistId })
       .populate('artists', 'name')
+      .populate({
+        path: 'songs',
+        select: '-albums -updatedAt -createdAt', // Exclude albums and updatedAt, createdAt
+        populate: {
+          path: 'artists', // Populate artists for each song
+          select: '_id name' // Only select artist names
+        }
+      })
       .lean()
     return albums.map((album) => ({
       _id: album._id,
       title: album.title,
       image_url: album.image_url,
+      type: album.type,
       songs: album.songs,
       createdAt: album.createdAt
     }))
