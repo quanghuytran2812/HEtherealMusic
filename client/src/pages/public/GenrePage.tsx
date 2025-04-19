@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { CardMore } from "@/components/cards";
 import { HeroSection } from "@/components/section";
@@ -38,15 +38,19 @@ const GenrePage = () => {
         title={genreById?.genre_name || "Genre"}
         backgroundImage={genreById?.image_url || ""}
       />
-      <div
-        className="absolute inset-0 h-[450px] bg-no-repeat bg-cover opacity-50"
-        style={{
-          backgroundImage: `url(${genreById?.image_url})`,
-          backgroundSize: "100%",
-          backgroundPosition: "top",
-        }}
-      />
-      <div className="absolute inset-0 h-[450px] bg-gradient-to-b from-transparent to-[#191C1A] backdrop-blur-[150px]" />
+      {memoizedPlaylists.length > 0 && (
+        <React.Fragment>
+          <div
+            className="absolute inset-0 h-[450px] bg-no-repeat bg-cover opacity-50"
+            style={{
+              backgroundImage: `url(${genreById?.image_url})`,
+              backgroundSize: "100%",
+              backgroundPosition: "top",
+            }}
+          />
+          <div className="absolute inset-0 h-[450px] bg-gradient-to-b from-transparent to-[#191C1A] backdrop-blur-[150px]" />
+        </React.Fragment>
+      )}
 
       {memoizedPlaylists.length > 0 ? (
         <div className="relative px-4 py-8">

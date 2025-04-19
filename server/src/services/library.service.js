@@ -25,6 +25,7 @@ const updatePlaylistSaves = async (trackId, increment) => {
 
 const getUserLibrary = async (userId) => {
   const library = await Library.findLibraryByUserId(userId)
+
   if (!library) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Library not found')
   }
@@ -38,7 +39,6 @@ const createNewLibrary = async (trackId, userId) => {
     if (!type) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Track does not belong to an album or playlist or user')
     }
-
     const library = await Library.findLibraryByUserId(userId)
     const trackExists = library ? await Library.trackExistInLibrary(userId, trackId, type) : false
     if (trackExists) {
@@ -57,7 +57,7 @@ const createNewLibrary = async (trackId, userId) => {
 
     return library
       ? await Library.updateLibrary(library._id, libraryUpdate)
-      : await Library.createNewLibrary({ items: [{ type, track: trackId }], user: userId })
+      : await Library.createNewLibrary({ items: [{ type, track: trackId.toString() }], user: userId })
   } catch (error) {
     throw error instanceof ApiError ? error : new Error(error.message)
   }
@@ -65,7 +65,7 @@ const createNewLibrary = async (trackId, userId) => {
 
 const getLibraryByUserId = async (userId) => {
   try {
-    const library = await getUserLibrary(userId)
+    const library = await Library.findLibraryByUserId(userId)
     return library
   } catch (error) {
     throw error instanceof ApiError ? error : new Error(error.message)

@@ -132,8 +132,8 @@ const unlikeSong = async (userId, songId) => {
 
     // Delete playlist if it's empty
     if (likedSongsPlaylist.songs.length === 0) {
-      await PlayList.removePlaylist(likedSongsPlaylist._id)
       await removeItemFromLibrary(likedSongsPlaylist._id, userId)
+      await PlayList.removePlaylist(likedSongsPlaylist._id)
       return { message: 'Liked songs playlist removed as it became empty' }
     }
 

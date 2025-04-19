@@ -53,7 +53,7 @@ const TrackPage = () => {
     isLoading: isTrackLoading,
     addLikedSong,
     removeLikedSong,
-  } = useSongStore();
+  } = useLibraryStore();
 
   // Memoized values
   const safeSongById = useMemo(

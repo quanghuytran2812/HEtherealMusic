@@ -133,14 +133,7 @@ const findAlbumByIdAndUpdate = async (albums, song) => {
 
 const findNewReleaseAlbums = async () => {
   try {
-    const currentDate = new Date()
-    const thirtyDaysAgo = new Date(
-      currentDate.setDate(currentDate.getDate() - 30)
-    )
-
-    const newReleases = await Album.find({
-      createdAt: { $gte: thirtyDaysAgo }
-    })
+    const newReleases = await Album.find()
       .select('_id title image_url artists songs')
       .populate({
         path: 'artists',
@@ -150,7 +143,7 @@ const findNewReleaseAlbums = async () => {
       .limit(5)
       .lean()
 
-    return newReleases
+    return newReleases || []
   } catch (error) {
     throw new Error(error)
   }

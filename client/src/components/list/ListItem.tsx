@@ -39,13 +39,9 @@ interface ListItemProps {
 }
 const ListItem = ({ track, arrayTracks = [] }: ListItemProps) => {
   const { isPlaying, currentSong } = usePlayerStore();
-  const { libraryMe, fetchLibraryMe } = useLibraryStore();
+  const { libraryMe, addLikedSong, removeLikedSong } = useLibraryStore();
   const menuActions = MenuActions();
-  const {
-    isLoading: isSongLoading,
-    addLikedSong,
-    removeLikedSong,
-  } = useSongStore();
+  const { isLoading: isSongLoading } = useSongStore();
   const isCurrentSong = useMemo(
     () => track._id === currentSong?._id,
     [track, currentSong]
@@ -60,16 +56,15 @@ const ListItem = ({ track, arrayTracks = [] }: ListItemProps) => {
           item.track.songs?.find((song) => song.includes(track._id))
       ) || false
     );
-  }, [libraryMe, track._id]);
+  }, [libraryMe, track]);
 
   const handleToggleLikeSong = async () => {
     if (!track._id) return;
     if (isSongInLibrary) {
-      removeLikedSong(track._id);
+      await removeLikedSong(track._id);
     } else {
-      addLikedSong(track._id);
+      await addLikedSong(track._id);
     }
-    await fetchLibraryMe();
   };
   return (
     <div className={cn(list_item, "group")} key={track.trackNumber}>

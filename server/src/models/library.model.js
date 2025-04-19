@@ -70,6 +70,7 @@ const createNewLibrary = async (data) => {
 }
 
 const findLibraryByUserId = async (userId) => {
+
   try {
     const library = await Library.findOne({ user: userId })
       .populate({
@@ -106,7 +107,6 @@ const findLibraryByUserId = async (userId) => {
         }
       }
     }
-
     return library
   } catch (error) {
     throw new Error(error)
@@ -119,7 +119,7 @@ const trackExistInLibrary = async (userId, trackId, typeItem) => {
       user: userId,
       'items.track': trackId,
       'items.type': typeItem
-    }).exec()
+    }).lean()
     return library
   } catch (error) {
     throw new Error(error)

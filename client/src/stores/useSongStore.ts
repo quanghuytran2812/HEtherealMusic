@@ -1,4 +1,4 @@
-import { apiGetRecommendedSongsByIds, apiGetSongById, apiLikeSong, apiUnlikeSong } from "@/apis/song";
+import { apiGetRecommendedSongsByIds, apiGetSongById } from "@/apis/song";
 import { Song } from "@/utils/types";
 import { create } from "zustand";
 
@@ -8,10 +8,8 @@ interface SongStoreState {
   isLoading: boolean;
   error: string | null;
 
-  addLikedSong: (songId: string) => void;
-  removeLikedSong: (songId: string) => void;
-  fetchSongById: (songId: string) => void;
-  fetchRecommendedSongs: (songId: string) => void;
+  fetchSongById: (songId: string) => Promise<void>;
+  fetchRecommendedSongs: (songId: string) => Promise<void>;
 }
 
 export const useSongStore = create<SongStoreState>((set) => ({
@@ -20,30 +18,6 @@ export const useSongStore = create<SongStoreState>((set) => ({
   songById: null,
   songRecommended: null,
 
-  addLikedSong: async (songId: string) => {
-    set({ isLoading: true, error: null });
-    try {
-      await apiLikeSong(songId);
-      set({ isLoading: false, error: null });
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : "Failed to add to liked song",
-        isLoading: false,
-      });
-    }
-  },
-  removeLikedSong: async (songId: string) => {
-    set({ isLoading: true, error: null });
-    try {
-      await apiUnlikeSong(songId);
-      set({ isLoading: false, error: null });
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : "Failed to remove from liked song",
-        isLoading: false,
-      });
-    }
-  },
   fetchSongById: async (songId: string) => {
     set({ isLoading: true, error: null });
     try {
