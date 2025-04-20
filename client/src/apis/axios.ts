@@ -136,7 +136,7 @@ export const endpoints = {
   follow: {
     followUser: "/follow/follow-user",
     unfollowUser: "/follow/unfollow-user/",
-    getArtistsFollowedByUser: "/follow/get-artists-followed-by-user",
+    getArtistsFollowedByUser: "/follow/get-artists-followed-by-user/",
     getRelatedArtists: "/follow/get-related-artists/"
   },
   search: {

@@ -376,7 +376,7 @@ const SearchPage = () => {
                         _id: genre._id,
                         title: genre.genre_name,
                         type: "genre",
-                        link: `/album/${genre._id}`,
+                        link: `/genre/${genre._id}`,
                         image_url: genre.image_url,
                       }}
                     />

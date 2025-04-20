@@ -19,11 +19,12 @@ const unfollowUser = catchAsync(async (req, res) => {
 const getArtistsFollowedByUser = catchAsync(async (req, res) => {
   const { uid } = req.user
   let { limit = 10, offset = 0 } = req.query
+  const { type } = req.params
 
   // Convert query params to numbers
   limit = parseInt(limit)
   offset = parseInt(offset)
-  const artists = await followService.getArtistsFollowedByUser(uid, limit, offset)
+  const artists = await followService.getArtistsFollowedByUser(uid, type, limit, offset)
   res.status(StatusCodes.OK).send(artists)
 })
 

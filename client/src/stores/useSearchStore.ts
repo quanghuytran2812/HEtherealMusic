@@ -8,6 +8,7 @@ interface SearchStoreState {
   isLoading: boolean;
   error: string | null;
   search: (query: string, type?: string) => Promise<void>;
+  clearQuery: () => void;
 }
 
 export const useSearchStore = create<SearchStoreState>((set) => ({
@@ -43,5 +44,8 @@ export const useSearchStore = create<SearchStoreState>((set) => ({
         isLoading: false 
       });
     }
+  },
+  clearQuery: () => {
+    set({ query: '', results: {} });
   }
 }));

@@ -1,4 +1,6 @@
 import {
+  body_medium,
+  body_small,
   ellipsis_one_line,
   img_cover,
   img_holder,
@@ -16,11 +18,13 @@ import { cn } from "@/lib/utils";
 import IconButton from "@/components/top_bar/icon_btn/IconButton";
 import { PlayButton } from "@/components/play_button";
 import {
+  ListMusic,
   Repeat,
   Repeat1,
   Shuffle,
   SkipBack,
   SkipForward,
+  Users,
   Volume,
   Volume1,
   Volume2,
@@ -29,6 +33,7 @@ import {
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { formatTime } from "@/utils/format";
+import { useRightSidebarStore } from "@/stores/useRightSidebarStore";
 
 interface PlayerLargeProps {
   open: boolean;
@@ -44,6 +49,7 @@ const PlayerLarge = ({ open, setOpen }: PlayerLargeProps) => {
     toggleRepeat,
     toggleShuffle,
   } = usePlayerStore();
+  const { view, isOpen } = useRightSidebarStore();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -146,15 +152,15 @@ const PlayerLarge = ({ open, setOpen }: PlayerLargeProps) => {
               <figure
                 className={cn(
                   img_holder,
-                  "w-20 h-20 rounded-lg flex-shrink-0 md:h-14 md:w-14"
+                  "w-20 h-20 rounded-lg flex-shrink-0 md:h-12 md:w-12"
                 )}
               >
                 <img
                   src={currentSong.image_url}
                   alt={currentSong.title}
                   className={cn(img_cover)}
-                  height={80}
-                  width={80}
+                  height={48}
+                  width={48}
                   loading="lazy"
                   decoding="async"
                 />
@@ -165,7 +171,7 @@ const PlayerLarge = ({ open, setOpen }: PlayerLargeProps) => {
                   className={cn(
                     ellipsis_one_line,
                     track_title,
-                    "text-sm font-normal tracking-[0.10px]"
+                    body_medium
                   )}
                   data-track-name
                 >
@@ -173,8 +179,9 @@ const PlayerLarge = ({ open, setOpen }: PlayerLargeProps) => {
                 </h3>
                 <p
                   className={cn(
+                    body_small,
                     ellipsis_one_line,
-                    "track-text text-xs font-normal opacity-70 tracking-[0.10px]"
+                    "track-text opacity-70"
                   )}
                   data-track-artist
                 >
@@ -215,10 +222,7 @@ const PlayerLarge = ({ open, setOpen }: PlayerLargeProps) => {
             <IconButton
               icon={
                 isShuffle ? (
-                  <Shuffle
-                    size={16}
-                    className="text-[#12E29A]"
-                  />
+                  <Shuffle size={16} className="text-[#12E29A]" />
                 ) : (
                   <Shuffle size={16} />
                 )
@@ -263,32 +267,44 @@ const PlayerLarge = ({ open, setOpen }: PlayerLargeProps) => {
           </div>
         </div>
 
-        <div className={cn(player_volume)}>
+        <div className="hidden md:flex items-center md:justify-self-end">
           <IconButton
-            icon={
-              volume > 0.66 ? (
-                <Volume2 size={20} />
-              ) : volume > 0.33 ? (
-                <Volume1 size={20} />
-              ) : volume > 0 ? (
-                <Volume size={20} />
-              ) : (
-                <VolumeX size={20} />
-              )
-            }
+            icon={<Users size={16} className={isOpen && view === "users"? "text-[#12E29A]" : ""}/>}
             variant="size-8"
+            onClick={() => useRightSidebarStore.getState().toggleView("users")}
           />
-          <input
-            type="range"
-            name="player-volume"
-            min={0}
-            max={1}
-            step={0.1}
-            value={volume}
-            onChange={handleVolumeChange}
-            className={cn(player_range, "player-range")}
-            data-volume-progress
+          <IconButton
+            icon={<ListMusic size={16} className={isOpen && view === "queue" ? "text-[#12E29A]" : ""}/>}
+            variant="size-8"
+            onClick={() => useRightSidebarStore.getState().toggleView("queue")}
           />
+          <div className={cn(player_volume)}>
+            <IconButton
+              icon={
+                volume > 0.66 ? (
+                  <Volume2 size={20} />
+                ) : volume > 0.33 ? (
+                  <Volume1 size={20} />
+                ) : volume > 0 ? (
+                  <Volume size={20} />
+                ) : (
+                  <VolumeX size={20} />
+                )
+              }
+              variant="size-8"
+            />
+            <input
+              type="range"
+              name="player-volume"
+              min={0}
+              max={1}
+              step={0.1}
+              value={volume}
+              onChange={handleVolumeChange}
+              className={cn(player_range, "player-range")}
+              data-volume-progress
+            />
+          </div>
         </div>
       </div>
 

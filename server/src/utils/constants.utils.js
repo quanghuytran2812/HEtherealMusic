@@ -12,7 +12,7 @@ const enumData = {
   albumType: ['single', 'album'],
   libraryType: ['User', 'Album', 'Playlist'],
   playerType: ['Album', 'Playlist'],
-  playlistType: ['all', 'topLists', 'popularPlaylists', 'likedSongs']
+  playlistType: ['individual', 'topLists', 'popularPlaylists', 'likedSongs']
 }
 
 module.exports = { WHITELIST_DOMAINS, enumData }

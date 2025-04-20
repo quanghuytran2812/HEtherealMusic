@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FolderOpen, Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -10,6 +10,7 @@ import IconButton from "@/components/top_bar/icon_btn/IconButton";
 import { MenuDropdown } from "@/components/menu";
 import SearchInput from "@/components/top_bar/search_bar/SearchInput";
 import { ProfileMenu } from "@/components/top_bar/menu/MenuItem";
+import { useSearchStore } from "@/stores/useSearchStore";
 
 const DEBOUNCE_DELAY = 500;
 
@@ -20,10 +21,23 @@ interface SearchBarProps {
 
 export const SearchBar = ({ display_name, images }: SearchBarProps) => {
   const navigate = useNavigate();
+  const { query, clearQuery } = useSearchStore();
   const [localQuery, setLocalQuery] = useState("");
   const { type } = useParams();
+  const location = useLocation();
   const menuItems = ProfileMenu();
 
+  useEffect(() => {
+    setLocalQuery(query);
+  }, [query]);
+
+  useEffect(() => {
+    if (!location.pathname.startsWith('/search')) {
+      clearQuery();
+      setLocalQuery("");
+    }
+  }, [location.pathname, clearQuery]);
+  
   const handleSearchNavigation = useCallback(() => {
     if (localQuery.trim()) {
       navigate(`/search/${type || "all"}/${encodeURIComponent(localQuery)}`);
@@ -41,7 +55,8 @@ export const SearchBar = ({ display_name, images }: SearchBarProps) => {
 
   const clearSearch = useCallback(() => {
     setLocalQuery("");
-  }, []);
+    clearQuery();
+  }, [clearQuery]);
 
   return (
     <div className={cn(search_bar, "search_bar")}>

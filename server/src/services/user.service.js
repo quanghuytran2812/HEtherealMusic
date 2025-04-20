@@ -57,8 +57,8 @@ const generateEmailContent = (verificationLink) => `
 <head>
   <style>
     .container { max-width: 600px; margin: 0 auto; }
-    .header { display: flex; align-items: center; }
-    .header img { width: 30px; height: 30px; background: #1ed760; border-radius: 50%; margin-right: 10px; padding: 4px;}
+    .header { display: flex; }
+    .header img { width: 30px; height: 30px; background: #1ed760; border-radius: 50%; margin-right: 10px; padding: 4px; margin-top: 22px;}
     .header p { font-size: x-large; color: #1ed760;}
     a { text-decoration: none; }
     .content { text-align: center; max-width: 450px; }

@@ -39,7 +39,7 @@ const LoginLinks = () => (
         className="text-sm font-normal underline hover:text-[#1ed760] transition-colors"
         href="/signup"
       >
-        Sign up for HEthereal
+        Sign up
       </a>
     </div>
   </React.Fragment>

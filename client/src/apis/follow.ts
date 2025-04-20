@@ -9,8 +9,8 @@ export const apiUnfollow = (followerId: string) => {
   return axios.delete(endpoints.follow.unfollowUser + followerId);
 };
 
-export const apiGetArtistsFollowedByUser = () => {
-  return axios.get(endpoints.follow.getArtistsFollowedByUser);
+export const apiGetArtistsFollowedByUser = (type: string) => {
+  return axios.get(endpoints.follow.getArtistsFollowedByUser + type);
 };
 
 export const apiGetRelatedArtists = (id: string) => {

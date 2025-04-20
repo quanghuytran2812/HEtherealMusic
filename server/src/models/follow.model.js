@@ -73,7 +73,7 @@ const removeFollow = async (followerId, followingId) => {
   }
 }
 
-const findArtistsFollowedByUser = async (userId, limit, offset) => {
+const findArtistsFollowedByUser = async (userId, limit, offset, type) => {
   try {
     const result = await Follow.aggregate([
       // Match follows by this user
@@ -89,26 +89,26 @@ const findArtistsFollowedByUser = async (userId, limit, offset) => {
           from: 'users', // Collection name
           localField: 'followed_user_id',
           foreignField: '_id',
-          as: 'artist'
+          as: 'followedUser'
         }
       },
-      { $unwind: '$artist' },
+      { $unwind: '$followedUser' },
 
       // Filter only artists
       {
         $match: {
-          'artist.type': 'artist',
-          'artist.isDeleted': { $ne: true }
+          'followedUser.type': type,
+          'followedUser.isDeleted': { $ne: true }
         }
       },
 
       // Project only the required fields
       {
         $project: {
-          _id: '$artist._id',
-          name: '$artist.name',
-          image_url: { $arrayElemAt: ['$artist.imageUrl', 0] }, // Get first image
-          type: '$artist.type'
+          _id: '$followedUser._id',
+          name: '$followedUser.name',
+          image_url: { $arrayElemAt: ['$followedUser.imageUrl', 0] },
+          type: '$followedUser.type'
         }
       },
 
@@ -122,7 +122,7 @@ const findArtistsFollowedByUser = async (userId, limit, offset) => {
       following_user_id: userId
     }).populate({
       path: 'followed_user_id',
-      match: { type: 'artist', isDeleted: { $ne: true } }
+      match: { type: type, isDeleted: { $ne: true } }
     })
 
     // Calculate if there are more items

@@ -10,6 +10,7 @@ import { BottomNav } from "@/components/bottom_nav";
 
 // Lazy load components that are not immediately needed"));
 const Footer = lazy(() => import("@/components/footers/Footer"));
+const RightLayout = lazy(() => import("@/layouts/public/RightLayout"));
 const PublicLayout = () => {
   const [modal, setModal] = useState(false);
 
@@ -27,12 +28,15 @@ const PublicLayout = () => {
       {/* Main content */}
       <main className="main-view custom-scrollbar md:ml-1">
         <Outlet />
-
         {/* FOOTER */}
         <Suspense fallback={<FooterSkeleton />}>
           <Footer />
         </Suspense>
       </main>
+
+      <Suspense fallback={<div>Loading...</div>}>
+        <RightLayout />
+      </Suspense>
 
       {/* PLAYER SMALL */}
       <PlayerSmall onViewToggle={() => setModal(!modal)} />

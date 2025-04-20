@@ -9,11 +9,13 @@ import { create } from "zustand";
 
 interface FollowStoreState {
   artistsFollowed: TopArtist | null;
+  friendsFollowed: TopArtist | null;
   relatedArtists: TopArtist | null;
   isLoading: boolean;
   error: string | null;
 
   fetchArtistsFollowedByUser: () => Promise<void>;
+  fetchFriendsFollowedByUser: () => Promise<void>;
   fetchArtistsRelated: (id: string) => Promise<void>;
   followUser: (
     artistId: string,
@@ -28,6 +30,7 @@ interface FollowStoreState {
 
 export const useFollowStore = create<FollowStoreState>()((set) => ({
   artistsFollowed: null,
+  friendsFollowed: null,
   relatedArtists: null,
   isLoading: false,
   error: null,
@@ -35,13 +38,27 @@ export const useFollowStore = create<FollowStoreState>()((set) => ({
   fetchArtistsFollowedByUser: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await apiGetArtistsFollowedByUser();
+      const response = await apiGetArtistsFollowedByUser("artist");
       if (response.status === 200) {
         set({ artistsFollowed: response.data, isLoading: false, error: null });
       }
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Failed to fetch followed artists",
+        isLoading: false,
+      });
+    }
+  },
+  fetchFriendsFollowedByUser: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await apiGetArtistsFollowedByUser("user");
+      if (response.status === 200) {
+        set({ friendsFollowed: response.data, isLoading: false, error: null });
+      }
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : "Failed to fetch followed friends",
         isLoading: false,
       });
     }

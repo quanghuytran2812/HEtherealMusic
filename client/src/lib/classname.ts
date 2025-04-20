@@ -91,7 +91,7 @@ export const page_responsive = 'lg:px-2 lg:pb-2 md:pt-0 md:pb-4 md:bg-[#000] lg:
 export const bottom_nav_responsive = 'lg:h-full lg:pt-0 lg:gap-0 lg:rounded-lg md:top-0 md:bottom-24 md:h-auto md:left-2 md:rounded-lg md:grid-cols-1 md:content-start md:gap-4 md:shadow-none'
 export const player_controller = 'md:flex md:flex-col-reverse md:items-center md:gap-3'
 export const progress_label = 'flex-shrink-0 w-10 whitespace-nowrap text-right'
-export const player_volume = 'hidden md:flex md:items-center md:gap-1 md:w-36 md:justify-self-end'
+export const player_volume = 'md:flex md:items-center md:gap-1 md:w-36 md:justify-self-end'
 // PAGE NOT FOUND
 export const error_page = 'h-screen bg-[#000] text-white flex flex-col items-center justify-center gap-7 text-center'
 // SEARCH PAGE

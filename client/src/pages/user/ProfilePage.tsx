@@ -1,7 +1,11 @@
 import { CardMore } from "@/components/cards";
 import { ProfileHeader } from "@/components/headers";
 import { ListItem } from "@/components/list";
+import IconButton from "@/components/top_bar/icon_btn/IconButton";
+import { Button } from "@/components/ui/button";
 import {
+  btn_follow,
+  detail_actions,
   divider,
   label_large,
   slider,
@@ -12,11 +16,13 @@ import {
 import { cn } from "@/lib/utils";
 import { useFollowStore } from "@/stores/useFollowStore";
 import { useMeStore } from "@/stores/useMeStore";
+import { Ellipsis } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 
 const ProfilePage = () => {
   const { userId } = useParams();
+  const { me } = useMeStore();
   const {
     topArtist,
     topTrack,
@@ -31,16 +37,24 @@ const ProfilePage = () => {
     isLoading: followLoading,
   } = useFollowStore();
 
+  const isOwnProfile = useMemo(() => me?._id === userId, [me?._id, userId]);
+
   useEffect(() => {
     const fetchData = async () => {
-      await Promise.all([
-        getTop("artists"),
-        getTop("tracks"),
-        fetchArtistsFollowedByUser(),
-      ]);
+      if (isOwnProfile) {
+        // Only fetch top artists/tracks for your own profile
+        await Promise.all([
+          getTop("artists"),
+          getTop("tracks"),
+          fetchArtistsFollowedByUser(),
+        ]);
+      } else if (userId) {
+        // For other profiles, just fetch their followed artists
+        await fetchArtistsFollowedByUser();
+      }
     };
     fetchData();
-  }, [getTop, fetchArtistsFollowedByUser]);
+  }, [getTop, fetchArtistsFollowedByUser, isOwnProfile, userId]);
 
   useEffect(() => {
     if (userId) {
@@ -52,6 +66,15 @@ const ProfilePage = () => {
     if (!userInfo?.imageUrl || userInfo.imageUrl.length === 0) return null;
     return userInfo.imageUrl[userInfo.imageUrl.length - 1];
   }, [userInfo]);
+
+  // const handleFollowToggle = async () => {
+  //   if (!userId) return;
+  //   if (isFollowing(userId)) {
+  //     await unfollowUser(userId);
+  //   } else {
+  //     await followUser(userId);
+  //   }
+  // };
 
   if (userLoading || followLoading) {
     return <div className="p-4 text-center">Loading profile...</div>;
@@ -82,9 +105,14 @@ const ProfilePage = () => {
         <div className="absolute inset-0 h-full bg-gradient-to-b from-transparent to-[#000] backdrop-blur-[150px]" />
 
         <div className={cn(divider, "md:hidden")}></div>
-
+        {!isOwnProfile && (
+          <div className={cn(detail_actions)}>
+            <Button className={cn(btn_follow)}>Follow</Button>
+            <IconButton icon={<Ellipsis size={24} />} />
+          </div>
+        )}
         {/* TOP ARTIST */}
-        {topArtist?.items && topArtist?.items.length > 0 && (
+        {isOwnProfile && topArtist?.items && topArtist?.items.length > 0 && (
           <section className="mt-4 isolate">
             <div className={cn(title_wrapper)}>
               <div className="flex flex-col gap-1 items-start">
@@ -136,7 +164,7 @@ const ProfilePage = () => {
         )}
 
         {/* TOP TRACKS */}
-        {topTrack?.items && topTrack?.items.length > 0 && (
+        {isOwnProfile  && topTrack?.items && topTrack?.items.length > 0 && (
           <section className="mt-4 isolate">
             <div className={cn(title_wrapper)}>
               <div className="flex flex-col gap-1 items-start">

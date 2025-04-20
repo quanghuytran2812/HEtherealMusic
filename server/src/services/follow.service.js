@@ -61,9 +61,12 @@ const unfollowUser = async (followingId, followerId) => {
   }
 }
 
-const getArtistsFollowedByUser = async (userId, limit, offset) => {
+const getArtistsFollowedByUser = async (userId, type, limit, offset) => {
   try {
-    const artists = await Follow.findArtistsFollowedByUser(userId, limit, offset)
+    if (!['artist', 'user'].includes(type)) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid type parameter. Must be "artist" or "user"')
+    }
+    const artists = await Follow.findArtistsFollowedByUser(userId, limit, offset, type)
     return artists
   } catch (error) {
     throw new Error(error)
