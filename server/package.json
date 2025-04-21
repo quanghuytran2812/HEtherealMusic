@@ -1,11 +1,12 @@
 {
-  "name": "hethereal-api",
+  "name": "h-ethereal-api",
   "private": true,
   "version": "1.0.0",
   "author": "augustus.hyu_",
+  "main": "./src/server.js",
   "license": "ISC",
   "scripts": {
-    "start": "node ./src/server.js",
+    "start": "cross-env BUILD_MODE=production nodemon --exec babel-node ./src/server.js",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "clean": "rm -rf build && mkdir build",
