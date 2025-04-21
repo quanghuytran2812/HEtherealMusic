@@ -51,11 +51,25 @@ The Advanced Spotify Clone is a modern web application that replicates the core 
      npm install
      ```
 
-   - Create a `.env` file in the backend directory and add your MongoDB URI and JWT secret:
+   - Create a `.env` file in the backend directory and add the following environment variables:
 
      ```
-     MONGO_URI=your_mongo_uri
-     JWT_SECRET=your_jwt_secret
+     CLIENT_URL=your_client_url
+     PORT=your_port
+     MONGODB_URI=your_mongo_uri
+     BUILD_MODE=your_build_mode
+     ACCESS_TOKEN_SECRET_SIGNATURE=your_access_token_secret_signature
+     ACCESS_TOKEN_LIFE=your_access_token_life
+     REFRESH_TOKEN_SECRET_SIGNATURE=your_refresh_token_secret_signature
+     REFRESH_TOKEN_LIFE=your_refresh_token_life
+     GOOGLE_CLIENT_ID=your_google_client_id
+     GOOGLE_CLIENT_SECRET=your_google_client_secret
+     BREVO_API_KEY=your_brevo_api_key
+     ADMIN_EMAIL_ADDRESS=your_admin_email_address
+     ADMIN_EMAIL_NAME=your_admin_email_name
+     CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+     CLOUDINARY_API_KEY=your_cloudinary_api_key
+     CLOUDINARY_API_SECRET=your_cloudinary_api_secret
      ```
 
    - Start the server:

@@ -43,8 +43,15 @@ app.use('/v1', routes)
 //Middleware xử lý lỗi tập trung
 app.use(errorHandlingMiddleware)
 
-// Start the server
-app.listen(port, () => {
+if (env.BUILD_MODE === 'production') {
+  app.listen(process.env.PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Production: Server is running on port ${process.env.PORT}`)
+  })
+} else {
+  // Start the server local development
+  app.listen(port, () => {
   // eslint-disable-next-line no-console
-  console.log(`Server is running on port ${port}`)
-})
+    console.log(`Server is running on port ${port}`)
+  })
+}
