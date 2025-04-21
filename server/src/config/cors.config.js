@@ -5,7 +5,7 @@ const { StatusCodes } = require('http-status-codes')
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin && env.BUILD_MODE === 'production') {
+    if (!origin && env.BUILD_MODE === 'development') {
       return callback(null, true)
     }
 
