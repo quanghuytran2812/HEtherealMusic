@@ -42,9 +42,13 @@ app.use('/v1', routes)
 
 //Middleware xử lý lỗi tập trung
 app.use(errorHandlingMiddleware)
-app.use('/', (req, res) => res.send('Congratulation 🎉🎉! Our Express server is Running on Vercel'))
+app.get('/', (req, res) => {
+  res.send('Congratulation 🎉🎉! Our Express server is Running on Vercel')
+})
 // Start the server
 app.listen(port, () => {
   // eslint-disable-next-line no-console
   console.log(`Server is running on port ${port}`)
 })
+
+module.exports = app
