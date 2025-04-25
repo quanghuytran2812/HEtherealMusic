@@ -42,7 +42,9 @@ app.use('/v1', routes)
 
 //Middleware xử lý lỗi tập trung
 app.use(errorHandlingMiddleware)
-
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
 // Start the server
 app.listen(port, () => {
   // eslint-disable-next-line no-console
