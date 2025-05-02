@@ -8,8 +8,8 @@
   "scripts": {
     "start": "cross-env BUILD_MODE=production node src/server.js",
     "dev": "cross-env BUILD_MODE=development nodemon --exec babel-node ./src/server.js",
-    "vercel-build": "npm install --production=false --legacy-peer-deps && npm run build",
-    "build": "babel src -d public/src --copy-files",
+    "vercel-build": "npm install --production=false && npm run build",
+    "build": "babel src -d public/src",
     "production": "cross-env BUILD_MODE=production node public/src/server.js"
   },
   "dependencies": {
