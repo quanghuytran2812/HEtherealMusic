@@ -2,6 +2,7 @@
  * Updated by augustus.hyu_'s author on January 02, 2024
  * "Code is like humor. When you have to explain it, it’s bad." by Cory House
  */
+require('dotenv').config()
 require('module-alias/register')
 const express = require('express')
 const cors = require('cors')
