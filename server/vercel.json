@@ -6,14 +6,16 @@
       "use": "@vercel/node",
       "config": {
         "includeFiles": ["src/**"],
-        "installCommand": "npm install --production=false"
+        "installCommand": "npm install --production=false",
+        "nodeVersion": "18.x"
       }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/server.js"
+      "dest": "src/server.js",
+      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
     }
   ]
 }
