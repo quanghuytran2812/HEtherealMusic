@@ -6,7 +6,14 @@
   "main": "server.js",
   "license": "ISC",
   "scripts": {
-    "start": "cross-env BUILD_MODE=production nodemon --exec babel-node ./src/server.js"
+    "start": "cross-env BUILD_MODE=production node ./public/src/server.js",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "clean": "rm -rf public && mkdir public",
+    "build-babel": "babel ./src -d ./public/src",
+    "build": "npm run clean && npm run build-babel",
+    "production": "npm run build && cross-env BUILD_MODE=production node ./public/src/server.js",
+    "dev": "cross-env BUILD_MODE=development nodemon --exec babel-node ./src/server.js"
   },
   "dependencies": {
     "@babel/runtime": "7.26.0",
