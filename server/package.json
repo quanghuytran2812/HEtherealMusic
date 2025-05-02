@@ -6,7 +6,11 @@
   "main": "server.js",
   "license": "ISC",
   "scripts": {
-    "start": "cross-env BUILD_MODE=production nodemon --exec babel-node ./src/server.js"
+    "start": "cross-env BUILD_MODE=production node src/server.js",
+    "dev": "cross-env BUILD_MODE=development nodemon --exec babel-node ./src/server.js",
+    "vercel-build": "npm install && npm run build",
+    "build": "babel src -d public/src",
+    "production": "cross-env BUILD_MODE=production node public/src/server.js"
   },
   "dependencies": {
     "@babel/runtime": "7.26.0",
@@ -23,6 +27,7 @@
     "http-status-codes": "2.3.0",
     "joi": "17.13.3",
     "jsonwebtoken": "9.0.2",
+    "module-alias": "^2.2.3",
     "moment": "2.30.1",
     "mongoose": "^8.10.0",
     "multer": "^1.4.5-lts.1",
@@ -41,5 +46,8 @@
     "eslint": "9.17.0",
     "globals": "15.14.0",
     "nodemon": "3.1.9"
+  },
+  "_moduleAliases": {
+    "@": "./src"
   }
 }
