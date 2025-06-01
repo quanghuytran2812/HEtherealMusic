@@ -6,12 +6,11 @@ The Advanced Spotify Clone is a modern web application that replicates the core 
 
 ## Features
 
-- **User Authentication**: Secure login and registration with JWT (JSON Web Tokens).
-- **Music Streaming**: Stream audio tracks with intuitive playback controls.
-- **Playlist Management**: Create, edit, and delete personalized playlists.
+- **User Authentication**: Secure login and account management to protect user data.
+- **Real-time Updates**: Dynamic streaming and updates for interactive experience.
+- **Playlist Management**: Create, manage, and explore personalized playlists effortlessly.
 - **Search Functionality**: Search for tracks, albums, and artists seamlessly.
 - **Responsive Design**: Optimized for both desktop and mobile devices.
-- **Real-time Updates**: Implemented using WebSockets for live notifications.
 
 ## Tech Stack
 
@@ -112,7 +111,7 @@ To deploy the application:
    - Create a new Vercel app.
    - Set the necessary environment variables for MongoDB and JWT.
    - Deploy your backend code.
-3. For the frontend, use platforms like Vercel or Netlify to host the React app.
+3. For the frontend, use platforms Vercel to host the React app.
 4. Ensure that the frontend is configured to connect to the deployed backend URL.
 
 ## Contributing
